@@ -14,7 +14,7 @@ concrete QuestionNep of Question = CatNep ** open ResNep, Prelude in {
     QuestVP qp vp = 
        let cl = mkSClause ("") (Ag Masc qp.n Pers3_L) vp;
            qp1 = qp.s ! Nom;
-           qp2 = qp.s ! Acc
+           qp2 = qp.s ! Ins
           in { s = \\t,p,o => case t of {
 --		             VPSmplPast => qp2 ++ cl.s ! t ! p ! ODir;
 					 _         => qp1 ++ cl.s ! t ! p ! ODir
@@ -24,7 +24,7 @@ concrete QuestionNep of Question = CatNep ** open ResNep, Prelude in {
 
     QuestSlash ip slash = 
      let ip1 = ip.s ! Nom;
-         ip2 = ip.s ! Acc
+         ip2 = ip.s ! Ins
      in {
       s = \\t,p,o => case t of { 
 --            VPSmplPast => ip2 ++ slash.s ! t ! p ! ODir;
@@ -45,7 +45,7 @@ concrete QuestionNep of Question = CatNep ** open ResNep, Prelude in {
 		  }
 		};
 
-    PrepIP p ip = {s = ip.s ! ResNep. Nom ++ p.s } ; -- case need to be confirmed
+    PrepIP p ip = {s = ip.s ! ResNep.Nom ++ p.s } ; -- case need to be confirmed
 
     AdvIP ip adv = {
       s = \\c => adv.s  ++ ip.s ! c ;
