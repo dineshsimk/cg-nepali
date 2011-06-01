@@ -1,0 +1,8 @@
+rf -file=src/AdjectiveNep.gf | ps -env=quotes -to_devanagari | wf -file=AdjectiveNep.gf
+rf -file=src/LexiconNep.gf | ps -env=quotes -to_devanagari | wf -file=LexiconNep.gf
+rf -file=src/MorphoNep.gf | ps -env=quotes -to_devanagari | wf -file=MorphoNep.gf
+rf -file=src/ResNep.gf | ps -env=quotes -to_devanagari | wf -file=ResNep.gf
+rf -file=src/StructuralNep.gf | ps -env=quotes -to_devanagari | wf -file=StructuralNep.gf
+rf -file=src/AdverbNep.gf | ps -env=quotes -to_devanagari | wf -file=AdverbNep.gf
+rf -file=src/QuestionNep.gf | ps -env=quotes -to_devanagari | wf -file=QuestionNep.gf
+rf -file=src/NumeralNep.gf | ps -env=quotes -to_devanagari | wf -file=NumeralNep.gf
