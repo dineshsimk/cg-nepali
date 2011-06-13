@@ -17,7 +17,7 @@ concrete ConjunctionNep of Conjunction =
       } ;
 
     ConjAP conj ss = conjunctDistrTable2 Number Gender conj ss ; 
---    ConjRS conj rs = conjunctDistrTable Agr conj rs ** { c = rs.c};
+    ConjRS conj rs = conjunctDistrTable Agr conj rs ** { c = rs.c};
 
 ---- These fun's are generated from the list cat's.
 
@@ -28,9 +28,9 @@ concrete ConjunctionNep of Conjunction =
     ConsAdv = consrSS comma ;
 --    ConsAdv xs x = consrTable Gender comma xs x ;
     BaseNP x y = twoTable NPCase x y ** {a = conjAgr x.a y.a ; isPron = andB x.isPron y.isPron} ;
---    BaseRS x y = twoTable Agr x y ** {c = x.c};
+    BaseRS x y = twoTable Agr x y ** {c = x.c};
     ConsNP xs x = consrTable NPCase comma xs x ** {a = conjAgr xs.a x.a } ;
---    ConsRS xs x = consrTable Agr comma xs x ** { c = xs.c};
+    ConsRS xs x = consrTable Agr comma xs x ** { c = xs.c};
     BaseAP x y = twoTable2 Number Gender x y ; -- ** {isPre = andB x.isPre y.isPre} ;
     ConsAP xs x = consrTable2 Number Gender comma xs x ;-- ** {isPre = andB xs.isPre x.isPre} ;
 

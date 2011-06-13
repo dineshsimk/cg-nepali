@@ -6,23 +6,23 @@ concrete SentenceNep of Sentence = CatNep ** open Prelude, ResNep in {
   lin
 
     PredVP np vp = mkClause np vp ;
-    {-
+    
     PredSCVP sc vp = mkSClause sc.s (defaultAgr) vp ;
 
     ImpVP vp = {
       s = \\pol,n => 
         let 
-          agr   = Ag Masc (numImp n) Pers2_Casual ;
-          verb  = infVP True vp agr ;
+          agr   = Ag Masc (numImp n) Pers2_M ;
+          verb  = vp.obj.s ++ (vp.s! PVForm).inf ++ vp.comp ! agr ;
           dont  = case pol of {
-            CNeg True => "mt" ;
-            CNeg False => "nh" ;
+            CNeg True => "नगर" ;
+            CNeg False => "नगर" ;
             _ => []
             }
         in
         dont ++ verb
     } ;
--}
+
     SlashVP np vp = 
       mkClause np vp ** {c2 = vp.c2} ;
 
@@ -40,7 +40,7 @@ concrete SentenceNep of Sentence = CatNep ** open Prelude, ResNep in {
 
     EmbedS  s  = {s = conjThat ++ s.s} ;
     EmbedQS qs = {s = qs.s ! QIndir} ;
---    EmbedVP vp = {s = infVP False vp defaultAgr} ; --- agr
+    EmbedVP vp = {s = vp.obj.s ++ (vp.s! PVForm).inf ++ vp.comp ! defaultAgr} ; --- agr
 
 
   UseCl  temp p cl = 

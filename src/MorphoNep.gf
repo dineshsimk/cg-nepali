@@ -19,6 +19,7 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
     Root ending in -a/अ- is regarded as reg and rest ireg 
     -}
     VCase = VReg | VIReg ; 
+    
 
 --1 Nouns
   oper
@@ -103,26 +104,29 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
   makePronReg str = makePron str (str + "laI:") (str + "le") (str + "laI:") (str + "baq") (str + "ma") ;
 
 --2. Derminers
-{-
-  IDeterminer = {s:Gender => Str ; n : Number};
   
-  makeDet : Str -> Str -> Number -> Determiner = 
-   \s1,s2,n -> {
+  makeDet : Str -> Str -> Str -> Str -> Number -> Determiner = 
+   \s1,s2,s3, s4, n -> {
      s = table {
-      Sg => s1 ;
-      Pl => s2
-	  } ;
+         Sg => table { Masc => s1 ;
+                       Fem  => s2 } ;
+         Pl => table { Masc => s3 ;
+                       Fem  => s4 }
+	     } ;
       n = n
 	};	
-	
-  makeIDet : Str -> Str -> Number -> IDeterminer = \s1,s2,n -> {
-   s = table {
-        Masc => s1;
-		Fem  => s2
-	 };
-	 n = n
-    };
-  
+
+{-  	
+  IDeterminer = {s : Gender => Str ; n : Number};
+  makeIDet : Str -> Str -> Number -> IDeterminer = 
+   \s1,s2,n -> {
+     s = table {
+         Masc => s1;
+		 Fem  => s2
+	     } ;
+	  n = n
+     };
+
   makeIQuant : Str -> Str -> Str -> Str -> {s:Number => Gender => Str} = \s1,s2,s3,s4 -> {
    s = table {
       Sg => table {
@@ -137,6 +141,18 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
 	};	
 
 -}
+
+-- Quantifiers
+  makeQuant : Str -> Str -> Str -> Str -> {s : Number => Gender => Str } =
+   \sm,sf,pm,pf -> {
+    s = table { 
+        Sg => table { Masc => sm ;
+                      Fem  => sf } ;
+	    Pl => table { Masc => pm ;
+                      Fem  => pf }
+	    }
+    }; 
+    
 -- Proposition     
   makePrep : Str -> Preposition = \str -> {s = str } **  { lock_Prep = <>};
 
@@ -149,10 +165,10 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
      s = table {
          Root     => root ;
          Inf      => inf ;
-         PVForm  => (tk 1 inf) ;
-         -- Inf_Fem  => ((tk 1 inf) + "y") ;
-         -- Inf_Obl  => (tk 1 inf) ;
-         -- Ablative => ((tk 1 inf) + "wN") ;     
+         PVForm   => (tk 1 inf) ;
+         Imp      => (mkImpForm root).s ;
+         ProgRoot aspect number gender => (mkProgRoot root aspect number gender).s ;
+
          VF tense aspect polarity person number gender  => 
             case aspect of {
                  Imperf => (mkVImperf root tense polarity person number gender).s ;
@@ -160,7 +176,58 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
             }
           }
        } ;
-
+  
+  --For the case of lets (lets sleep)
+  mkImpForm : Str -> {s:Str} ;
+  mkImpForm str =
+   let vcase = (rootCheck str).vcase;
+       root2 = (rootCheck str).root2
+    in { 
+     s = case vcase of {
+         VReg => root2 + "wV" ;
+         _    => root2 + "AV"
+      };
+    };
+    
+  --For the progressive root case
+  mkProgRoot : Str -> Aspect -> Number -> Gender -> {s : Str } = 
+   \root,aspect,number,gender -> 
+    let root1 = (rootCheck root).root1 ;
+        root2 = (rootCheck root).root2 ;
+        vcase = (rootCheck root).vcase
+     in {
+      s= case vcase of {
+       VReg => (mkProg root2 aspect number gender).s ;
+        _   => (mkProg1 root2 aspect number gender).s
+       };
+      };
+   
+   
+   mkProg : Str -> Aspect -> Number -> Gender -> {s : Str } =
+     \root2,aspect,number,gender -> {
+      s = case <aspect,number,gender> of {
+        <Imperf, _,    _> => root2 + "dE" ;
+       
+        <Perf,  Sg, Masc> => root2 + "irheko" ;
+        <Perf,  Sg, Fem>  => root2 + "irheki" ;
+        <Perf,  Pl,    _> => root2 + "irheka"
+        };
+      };
+    
+   
+   mkProg1 : Str -> Aspect -> Number -> Gender -> {s : Str } =
+     \root,aspect,number,gender -> {
+      s = case <aspect,number,gender> of {
+        <Imperf, _,    _> => root + "dE" ;
+       
+        <Perf,  Sg, Masc> => root + "i:rheko" ;
+        <Perf,  Sg, Fem>  => root + "i:rheki" ;
+        <Perf,  Pl,    _> => root + "i:rheka" 
+        };
+      } ;       
+       
+   --need to check for want_VV
+   --
    rootCheck : Str -> {root1:Str; root2:Str; vcase: VCase} = 
      \root -> {
      {-
@@ -194,18 +261,19 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
           rot + ("e"|"u"|"U") => root + "nx:" ;
           rot + ("f"|"F")     => root + "V" ;
           _                   => root
-        } ;     
+        } ; 
     root2 = case root of {
           "ja"                => "g" ;
           "hu"                => "B" ;
           rot + "x:"          => rot ;
           rot + ("a"|"i"|"I") => root ;
-          rot + ("e"|"u"|"U") => rot+"o" ;
+          rot + ("e"|"u"|"U") => rot + "o" ;
           rot + ("f"|"F")     => rot ;
           _                   => root
         } ; 
     vcase = case root of {
           rot + "x:" => VReg;   
+          rot + "h"  => VReg;   
           _          => VIReg
         }
     } ;
@@ -340,33 +408,33 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
          
    -- mkVPstSNP Helper for VRrg case
    mkVPstSNPReg : Str -> Str -> Polarity -> NPerson -> Number -> Gender -> {s:Str} = 
-     \root, root1, po, pn, n, g ->
+     \root, root2, po, pn, n, g ->
       {s = case <po, pn, n, g> of {   
            -- Positive case
-           <Pos, Pers1,    Sg,   _>  => root1 + "eV" ; -- एँ
+           <Pos, Pers1,    Sg,   _>  => root2 + "eV" ; -- एँ
            <Pos, Pers1,    Pl,   _>  => root  + "ywM" ; -- यौं
-           <Pos, Pers2_L,  Sg,   _>  => root1 + "isx:" ; -- इस्
+           <Pos, Pers2_L,  Sg,   _>  => root2 + "isx:" ; -- इस्
            <Pos, Pers2_L,  Pl,   _>  => root  + "yw" ; -- यौ
            <Pos, Pers2_M,   _,   _>  => root  + "yw" ; -- यौ             
            <Pos, Pers3_L,  Sg, Masc> => root  + "yo" ; -- यो
-           <Pos, Pers3_L,  Sg, Fem>  => root1 + "I" ; -- इ (पढी)
-           <Pos, Pers3_L,  Pl,   _>  => root1 + "e" ; -- ए (पढे)     
-           <Pos, Pers3_M,  Sg, Fem>  => root1 + "inx:" ; -- इन् (पढिन्)
-           <Pos, Pers3_M,   _,   _>  => root1 + "e" ; -- ए (पढे)     
+           <Pos, Pers3_L,  Sg, Fem>  => root2 + "I" ; -- इ (पढी)
+           <Pos, Pers3_L,  Pl,   _>  => root2 + "e" ; -- ए (पढे)     
+           <Pos, Pers3_M,  Sg, Fem>  => root2 + "inx:" ; -- इन् (पढिन्)
+           <Pos, Pers3_M,   _,   _>  => root2 + "e" ; -- ए (पढे)     
            <Pos,       _,   _,   _>  => root  + "nuByo" ; -- नुभयो
           
            -- Negative case
-           <Neg, Pers1,    Sg,   _>  => root1 + "inV" ; -- इनँ
-           <Neg, Pers1,    Pl,   _>  => root1 + "enEV" ; -- एनैँ
-           <Neg, Pers2_L,  Sg,   _>  => root1 + "insx:" ; -- इनस्
-           <Neg, Pers2_L,  Pl,   _>  => root1 + "enE" ; -- एनै
-           <Neg, Pers2_M,  Sg, Fem>  => root1 + "inE" ; -- इनै    
-           <Neg, Pers2_M,   _,   _>  => root1 + "enE" ; -- एनै             
-           <Neg, Pers3_L,  Sg, Masc> => root1 + "en" ; -- एन
-           <Neg, Pers3_L,  Sg, Fem>  => root1 + "in" ; -- इन (पढिन)
-           <Neg, Pers3_L,  Pl,   _>  => root1 + "ennx:" ; -- एनन् (पढेनन्)     
-           <Neg, Pers3_M,  Sg, Fem>  => root1 + "innx:" ; -- इनन् (पढिनन्)
-           <Neg, Pers3_M,   _,   _>  => root1 + "ennx:" ; -- एनन् (पढेनन्)     
+           <Neg, Pers1,    Sg,   _>  => root2 + "inV" ; -- इनँ
+           <Neg, Pers1,    Pl,   _>  => root2 + "enEV" ; -- एनैँ
+           <Neg, Pers2_L,  Sg,   _>  => root2 + "insx:" ; -- इनस्
+           <Neg, Pers2_L,  Pl,   _>  => root2 + "enE" ; -- एनै
+           <Neg, Pers2_M,  Sg, Fem>  => root2 + "inE" ; -- इनै    
+           <Neg, Pers2_M,   _,   _>  => root2 + "enE" ; -- एनै             
+           <Neg, Pers3_L,  Sg, Masc> => root2 + "en" ; -- एन
+           <Neg, Pers3_L,  Sg, Fem>  => root2 + "in" ; -- इन (पढिन)
+           <Neg, Pers3_L,  Pl,   _>  => root2 + "ennx:" ; -- एनन् (पढेनन्)     
+           <Neg, Pers3_M,  Sg, Fem>  => root2 + "innx:" ; -- इनन् (पढिनन्)
+           <Neg, Pers3_M,   _,   _>  => root2 + "ennx:" ; -- एनन् (पढेनन्)     
            <Neg,       _,   _,   _>  => root  + "nuBe:n" -- नुभएन
            } 
       } ;
@@ -430,7 +498,7 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
           <Pos, Pers3_L, Pl,   _>  => root + "Te" ; -- थे
           <Pos, Pers3_M, Sg, Fem>  => root + "Tinx:" ; -- थिन्
           <Pos, Pers3_M,  _,   _>  => root + "Te" ; -- थे          
-          <Pos,       _,  _,   _>  => root1 + "mkVPstHNPnuhunx:z+Tx:yo" ; -- नुहुन्‌थ्यो
+          <Pos,       _,  _,   _>  => root1 + "nuhunx:z+Tx:yo" ; -- नुहुन्‌थ्यो
           
           <Neg, Pers1,   Sg,    _> => root + neg + "TeM" ; -- थें
           <Neg, Pers1,   Pl,    _> => root + neg + "Tx:ywM" ; -- थ्यौं
@@ -440,7 +508,7 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
           <Neg, Pers3_L, Sg, Masc> => root + neg + "Tx:yo" ; -- थ्यो
           <Neg, Pers3_L, Sg, Fem>  => root + neg + "TI" ; -- थी
           <Neg, Pers3_L, Pl,   _>  => root + neg + "Te" ; -- थे
-          <Neg, Pers3_M, Sg, Fem>  => root + neg + "Tinx:" ; -- थिन्
+          <Neg, Pers3_M, Sg, Fem>  => root + neg + "TInx:" ; -- थिन्
           <Neg, Pers3_M,  _,   _>  => root + neg + "Te" ; -- थे          
           <Neg,       _,  _,   _>  => root1 + "nuhuVdEnTx:yo" -- नुहुँदैनथ्यो
           }
@@ -452,8 +520,8 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
      \ root, root2, vc, po, p, n, g -> 
       {s = case vc of {
            VReg  => case po of {
-                    Pos => (mkVPstUNPReg root ""  p n g).s ;
-                    Neg => (mkVPstUNPReg root "n" p n g).s 
+                    Pos => (mkVPstUNPReg root root2 ""  p n g).s ;
+                    Neg => (mkVPstUNPReg root root2 "n" p n g).s 
                     } ;
            VIReg => case po of {
                     Pos => (mkVPstUNPIReg root root2 ""  p n g).s ;
@@ -463,23 +531,23 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
       };
 
    -- mkVPstUNP helper for VReg case
-   mkVPstUNPReg : Str -> Str -> NPerson -> Number -> Gender -> {s:Str} = 
-      \root, na, pn, nu, g ->
+   mkVPstUNPReg : Str -> Str -> Str -> NPerson -> Number -> Gender -> {s:Str} = 
+      \root, root2, na, pn, nu, g ->
       {s = case <pn, nu, g> of {
-          <Pers1,   Sg, Masc> => root  + "e" + na + "cu" ; -- एछु
-          <Pers1,   Sg, Fem>  => root  + "i" + na + "cu" ; -- इछु
-          <Pers1,   Pl,    _> => root  + "e" + na + "cwV" ; -- एछौँ
-          <Pers2_L, Sg, Masc> => root  + "e" + na + "csx:" ; -- एछस्
-          <Pers2_L, Sg, Fem>  => root  + "i" + na + "csx:" ; -- इछस्
-          <Pers2_L, Pl,    _> => root  + "e" + na + "cw" ; -- एछौ                    
-          <Pers2_M, Sg, Fem>  => root  + "i" + na + "cw" ; -- इछौ
-          <Pers2_M,  _,    _> => root  + "e" + na + "cw" ; -- एछौ               
-          <Pers3_L, Sg, Masc> => root  + "e" + na + "c" ; -- एछ
-          <Pers3_L, Sg, Fem>  => root  + "i" + na + "c" ; -- इछ
-          <Pers3_L, Pl,   _>  => root  + "e" + na + "cnx:" ; -- एछन्
-          <Pers3_M, Sg, Fem>  => root  + "i" + na + "cnx:" ; -- इछन्
-          <Pers3_M,  _,   _>  => root  + "e" + na + "cnx:" ; -- एछन्
-          <      _,  _,   _>  => root  + "nuBe:" + na +"c" -- नुभएछ
+          <Pers1,   Sg, Masc> => root2  + "e" + na + "cu" ; -- एछु
+          <Pers1,   Sg, Fem>  => root2  + "i" + na + "cu" ; -- इछु
+          <Pers1,   Pl,    _> => root2  + "e" + na + "cwV" ; -- एछौँ
+          <Pers2_L, Sg, Masc> => root2  + "e" + na + "csx:" ; -- एछस्
+          <Pers2_L, Sg, Fem>  => root2  + "i" + na + "csx:" ; -- इछस्
+          <Pers2_L, Pl,    _> => root2  + "e" + na + "cw" ; -- एछौ                    
+          <Pers2_M, Sg, Fem>  => root2  + "i" + na + "cw" ; -- इछौ
+          <Pers2_M,  _,    _> => root2  + "e" + na + "cw" ; -- एछौ               
+          <Pers3_L, Sg, Masc> => root2  + "e" + na + "c" ; -- एछ
+          <Pers3_L, Sg, Fem>  => root2  + "i" + na + "c" ; -- इछ
+          <Pers3_L, Pl,   _>  => root2  + "e" + na + "cnx:" ; -- एछन्
+          <Pers3_M, Sg, Fem>  => root2  + "i" + na + "cnx:" ; -- इछन्
+          <Pers3_M,  _,   _>  => root2  + "e" + na + "cnx:" ; -- एछन्
+          <      _,  _,   _>  => root   + "nuBe:" + na +"c" -- नुभएछ
         }
       } ;
    
@@ -488,21 +556,21 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
    mkVPstUNPIReg : Str -> Str -> Str -> NPerson -> Number -> Gender -> {s:Str} = 
      \root, root2, na, pn, nu, g -> 
       {s = case <pn, nu, g> of {
-           <Pers1,   Sg, Masc> => root2  + "e:" + na + "cu" ; -- एछु
-           <Pers1,   Sg, Fem>  => root2  + "i:" + na + "cu" ; -- इछु
-           <Pers1,   Pl,    _> => root2  + "e:" + na + "cwV" ; -- एछौँ
-           <Pers2_L, Sg, Masc> => root2  + "e:" + na + "csx:" ; -- एछस्
-           <Pers2_L, Sg, Fem>  => root2  + "i:" + na + "csx:" ; -- इछस्
-           <Pers2_L, Pl,    _> => root2  + "a:" + na + "cw" ; -- एछौ                    
-           <Pers2_M, Sg, Fem>  => root2  + "i:" + na + "cw" ; -- इछौ
-           <Pers2_M,  _,    _> => root2  + "e:" + na + "cw" ; -- एछौ        
+           <Pers1,   Sg, Masc> => root2 + "e:" + na + "cu" ; -- एछु
+           <Pers1,   Sg, Fem>  => root2 + "i:" + na + "cu" ; -- इछु
+           <Pers1,   Pl,    _> => root2 + "e:" + na + "cwV" ; -- एछौँ
+           <Pers2_L, Sg, Masc> => root2 + "e:" + na + "csx:" ; -- एछस्
+           <Pers2_L, Sg, Fem>  => root2 + "i:" + na + "csx:" ; -- इछस्
+           <Pers2_L, Pl,    _> => root2 + "e:" + na + "cw" ; -- एछौ                    
+           <Pers2_M, Sg, Fem>  => root2 + "i:" + na + "cw" ; -- इछौ
+           <Pers2_M,  _,    _> => root2 + "e:" + na + "cw" ; -- एछौ        
           
-           <Pers3_L, Sg, Masc> => root2  + "e:" + na + "c" ; -- एछ
-           <Pers3_L, Sg, Fem>  => root2  + "i:" + na + "c" ; -- इछ
-           <Pers3_L, Pl,   _>  => root2  + "e:" + na + "cnx:" ; -- एछन्
-           <Pers3_M, Sg, fem>  => root2  + "i:" + na + "cnx:" ; -- इछन्
-           <Pers3_M,  _,   _>  => root2  + "e:" + na + "cnx:" ; -- एछन्
-           <      _,  _,   _>  => root + "nuBe:" + na +"c" -- नुभएनछ
+           <Pers3_L, Sg, Masc> => root2 + "e:" + na + "c" ; -- एछ
+           <Pers3_L, Sg, Fem>  => root2 + "i:" + na + "c" ; -- इछ
+           <Pers3_L, Pl,   _>  => root2 + "e:" + na + "cnx:" ; -- एछन्
+           <Pers3_M, Sg, fem>  => root2 + "i:" + na + "cnx:" ; -- इछन्
+           <Pers3_M,  _,   _>  => root2 + "e:" + na + "cnx:" ; -- एछन्
+           <      _,  _,   _>  => root  + "nuBe:" + na +"c" -- नुभएनछ
            }
      } ;
      
@@ -521,8 +589,8 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
           <Pos, Pers3_L,  Sg,   _>  => root + "nec" ; -- नेछ
           <Pos, Pers3_L,  Pl,   _>  => root + "necnx:" ; -- नेछन्      
           <Pos, Pers3_M,   _, Masc> => root + "necnx:" ; -- नेछन्
-          <Pos, Pers3_M,  Sg, Fem>  => root + "necnx:" ; -- नेछिन्      
-          <Pos, Pers3_M,  Pl, Fem>  => root + "necnx:" ; -- नेछन्            
+          <Pos, Pers3_M,  Sg, Fem>  => root + "necinx:" ; -- नेछिन्      
+          <Pos, Pers3_M,  Pl, Fem>  => root + "necinx:" ; -- नेछन्            
           <Pos,       _,   _,   _>  => root + "nuhunec" ; -- नुहुनेछ      
           
           -- Negative Case
@@ -544,30 +612,30 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
    mkVFutNDNP : Str -> Str -> VCase -> Polarity -> NPerson -> Number -> Gender -> {s:Str} = 
      \root, root2, vc, po, pn, n, g ->
       {s = case vc of {
-           VReg  => (mkVFutNDNPReg root po pn n g).s ;
+           VReg  => (mkVFutNDNPReg root root2 po pn n g).s ;
            VIReg => (mkVFutNDNPIReg root2 po pn n g).s
            }
       } ;
    
    -- mkVFutNDNP helper for VReg case
-   mkVFutNDNPReg : Str -> Polarity -> NPerson -> Number -> Gender -> {s:Str} = 
-     \root, po, pn, n, g ->
+   mkVFutNDNPReg : Str -> Str -> Polarity -> NPerson -> Number -> Gender -> {s:Str} = 
+     \root, root2, po, pn, n, g ->
       {s = case <po, pn, n, g> of {
-          <Pos, Pers1,   Sg,    _> => root + "uVla" ; -- उँला 
-          <Pos, Pers1,   Pl,    _> => root + "wVla" ; -- आँला
-          <Pos, Pers2_L, Sg, Masc> => root + "lasx:" ; -- लास् 
-          <Pos, Pers2_L, Sg, Fem>  => root + "lisx:" ; -- लिस्
-          <Pos, Pers2_L, Pl,    _> => root + "wla" ; -- औला 
-          <Pos, Pers2_M, Pl,  Fem> => root + "wli" ; -- औलि 
-          <Pos, Pers3_L, Sg, Masc> => root + "la" ; -- ला
-          <Pos, Pers3_L, Sg, Fem>  => root + "lI" ; -- ली
-          <Pos, Pers3_L, Pl,   _>  => root + "lanx:" ; -- लान्
-          <Pos, Pers3_M, Sg, Fem>  => root + "linx:" ; -- लिन्
-          <Pos, Pers3_M,  _,   _>  => root + "lanx:" ; -- लान्
-          <Pos,       _,  _,   _>  => root + "nuhola" ; -- नुहोला
+          <Pos, Pers1,   Sg,    _> => root2 + "uVla" ; -- उँला 
+          <Pos, Pers1,   Pl,    _> => root2 + "wVla" ; -- आँला
+          <Pos, Pers2_L, Sg, Masc> => root  + "z=lasx:" ; -- लास् 
+          <Pos, Pers2_L, Sg, Fem>  => root  + "lIsx:" ; -- लिस्
+          <Pos, Pers2_L, Pl,    _> => root2 + "wla" ; -- औला 
+          <Pos, Pers2_M, Pl,  Fem> => root2 + "wli" ; -- औलि 
+          <Pos, Pers3_L, Sg, Masc> => root  + "la" ; -- ला
+          <Pos, Pers3_L, Sg, Fem>  => root  + "lI" ; -- ली
+          <Pos, Pers3_L, Pl,   _>  => root  + "lanx:" ; -- लान्
+          <Pos, Pers3_M, Sg, Fem>  => root  + "lInx:" ; -- लिन्
+          <Pos, Pers3_M,  _,   _>  => root  + "lanx:" ; -- लान्
+          <Pos,       _,  _,   _>  => root  + "z=nuhola" ; -- नुहोला
           
           -- TODO : NOT CLEAR DEFINITION IN BOOK
-          <Neg,       _,  _,   _>  => "TODO" 
+          <Neg,       _,  _,   _>  => "quxu" 
         }
       } ;
  
@@ -589,7 +657,7 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
            <Pos,       _,  _,   _>  => root + "nuhola" ; -- नुहोला
            
            -- TODO : NOT CLEAR DEFINITION IN BOOK
-          <Neg,       _,  _,   _>  => "TODO" 
+          <Neg,       _,  _,   _>  => "quxu" 
            }
         } ;
    
@@ -819,14 +887,13 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
         }
       };
       
- IntPronForm = {s: Case => Str};
- mkIntPronForm : (x1,x2,x3,x4:Str) -> IntPronForm =
-  \y1,y2,y3,y4 -> {
-   s = 
-    table {
-	            Nom => y1;
-	            _   => y2
-		 }
+  IntPronForm = {s: Case => Str};
+  mkIntPronForm : (x1,x2,x3,x4:Str) -> IntPronForm =
+   \y1,y2,y3,y4 -> {
+    s = table {
+	    Nom => y1;
+        _   => y2
+		}
 	};
-	
+	   
  }

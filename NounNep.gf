@@ -10,15 +10,18 @@ concrete NounNep of Noun = CatNep ** open ResNep, Prelude in {
       } ;
 
     UsePN pn = {s = \\c => toNP pn.s c ; a = agrP3 pn.g Sg } ;
-    UsePron p = {s = \\c => np2pronCase p.s c p.a ; a = p.a } ; --- ??? a not taken
+    
+    --TODO NEED TO CHANGE 
+    UsePron p = {s = \\c => np2pronCase p.s c p.a ; a = p.a } ;
 
     PredetNP pred np = {
       s = \\c => pred.s ++ np.s ! c ;
       a = np.a
       } ;
 
+    -- Neds to change this, 
+    -- needs to check for root ending case, now works for regular cases only
     PPartNP np v2 = {
-      -- VF NPresent Imperf Pos (fromAgr np.a).p (fromAgr np.a).n (fromAgr np.a).g
       s = \\c => case (fromAgr np.a).n of {
          Sg =>  np.s ! c ++ v2.s ! Root ++ eko;
          Pl =>  np.s ! c ++ v2.s ! Root ++ eka
@@ -27,31 +30,30 @@ concrete NounNep of Noun = CatNep ** open ResNep, Prelude in {
       } ;
     
     RelNP np rs = {
-	  s = \\c => np.s ! c  ++ rs.s ! np.a ;
+	  s = \\c => np.s ! c  ++ "," ++ rs.s ! np.a ;
       a = np.a 
       } ;
 
     AdvNP np adv = {
-      s = \\c => np.s ! c ++ adv.s ; -- from WHY??
+      s = \\c => np.s ! c ++ adv.s ; 
       a = np.a 
       } ;
 
     DetNP det = {
       s = \\c => det2NP det c ; ---- case
       a = agrP3 Masc Sg
-      -- isPron = False
       } ;
     
     -- ?? quant
     DetQuantOrd quant num ord = {
 --      s = \\ c => detquant2det quant.s num.s c  ++ ord.s ; 
-      s = \\n,g => quant.s ! n ! g ! Nom ++ ord.s ++ num.s ; 
+      s = \\n,g => quant.s ! n ! g  ++ ord.s ++ num.s ; 
       n = num.n
       } ;
 
     DetQuant quant num = {
 --      s = \\c => detquant2det quant.s num.s c; 
-      s = \\n,g => quant.s!n!g!Nom ++ num.s;
+      s = \\n,g => quant.s!n!g++ num.s;
 	  n = num.n
       } ;
       
@@ -60,9 +62,7 @@ concrete NounNep of Noun = CatNep ** open ResNep, Prelude in {
 
     NumCard n = n ** {hasCard = True} ;
 
-
-    -- PossPron p = {s = \\_,_,_ => p.ps ; a = p.a} ;
-
+    PossPron p = {s = \\_,_ => p.ps ; a = p.a} ;
     
     NumDigits n = {s = n.s ! NCard ; n = n.n} ;
     OrdDigits n = {s = n.s ! NOrd; n = n.n} ;
@@ -84,8 +84,8 @@ concrete NounNep of Noun = CatNep ** open ResNep, Prelude in {
       a = agrP3 cn.g Pl
       } ;
 
-    DefArt = {s = \\_,_,_ => [] ; a = defaultAgr} ;
-    IndefArt = {s = \\_,_,_ => [] ; a = defaultAgr } ;
+    DefArt = {s = \\_,_ => [] } ;
+    IndefArt = {s = \\_,_ => [] } ;
 
     MassNP cn = {s = \\c => toNP (cn.s ! Sg) c ; a = agrP3 cn.g Sg } ;
 
@@ -106,18 +106,22 @@ concrete NounNep of Noun = CatNep ** open ResNep, Prelude in {
       c3 = f.c3
       } ;
 
-    ComplN2 f x = {s = \\n,c => x.s ! NPC Nom ++ f.c2  ++ f.s ! n ! c ;
+--distance_N3 = mkN3 (regN "durI") (mkPrep "deKi") (mkPrep "smx:m") "ko"  ; -- दुरी देखी सम्म त्यहाँ
+
+    ComplN2 f x = {
+       s = \\n,c => x.s ! NPC Nom ++ f.c2 ++ f.s ! n ! c ;
+       
 --	   Obl => x.s ! NPC c ++ f.c3 ++ f.s ! n ! c ;
 --	   Abl => x.s ! NPC c ++ f.c3 ++ f.s ! n ! c ;
 --	   ResPnb.Voc => x.s ! NPC c ++ f.c3 ++ f.s ! n ! c 
 --	   };
 	   g = f.g;
-	   };
+	   } ;
 
     ComplN3 f x = {
-      s = \\n,c =>  x.s ! NPObj ++ f.c4  ++ f.s ! n ! Nom  ;
+      s = \\n,c =>  x.s ! NPObj ++ f.c3 ++ f.c4 ++ f.s ! n ! Nom  ;
       g = f.g ;
-      c2 = f.c2;
+      c2 = f.c2 ;
       c3 = f.c3
       } ;
 

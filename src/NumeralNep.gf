@@ -11,7 +11,7 @@ param Size = singl | less100 | more100 ;
 oper LinDigit = {s : DForm => Str ; size : DSize ; n : Number} ;
 
 
-lincat Dig = {s:Str ; n : Number};
+lincat Dig = {s:Str ; n : Number} ;
 lincat Digit = LinDigit ;
 lincat Sub10 = {s : DForm => Str ; size : DSize ; n : Number} ;
 lincat Sub100 = {s : Str ; size : Size ; n : Number} ;
@@ -61,7 +61,7 @@ oper
     sg => mkR "e:Gar"       "e:kx:kai:s" "e:ktIs"   "e:kCalIs"  "e:kafnx:z=n"   "e:ksQx:QI"  "e:khtx:tr"  "e:kasI"   "e:kanx:z=nbx:be" ;  
     r2 => mkR "bahx:r"      "bai:s"      "btx:tIs"   "byalIs"    "bafnx:z=n"     "bEsQx:QI"   "bhtx:tr"    "byasI"    "byanx:z=nbx:be" ; 
     r3 => mkR "tehx:r"      "tei:s"     "tetx:tIs"  "tx:riCalIs" "tx:ripnx:z=n" "tx:risQx:QI" "tx:rihtx:tr" "tx:riyasI" "tx:riyanx:z=nbx:be" ;
-    r4 => mkR "CwD"       "CwbIs"     "CwMtIs"    "CvalIs"    "Cvnx:z=n"      "CwsQx:QI"   "Cwhtx:tr"   "CwrasI"   "Cwranx:z=nbx:be"; 
+    r4 => mkR "CwD"         "CwbIs"     "CwMtIs"    "CvalIs"    "Cvnx:z=n"      "CwsQx:QI"   "Cwhtx:tr"   "CwrasI"   "Cwranx:z=nbx:be"; 
     r5 => mkR "pnx:Dx:r"    "pCx:CIs"   "pEMtIs"    "pEMtalIs"  "pCpnx:z=n"     "pEMsQx:QI"  "pChtx:tr"   "pCasI"    "pnx:Canx:z=nbx:be" ; 
     r6 => mkR "sohx:r"      "cbx:bIs"   "ctx:tIs"   "cyalIs"    "cpnx:z=n"      "cEMsQx:QI"  "cyhtx:tr"   "cyasI"    "cyanx:z=nbx:be" ; 
     r7 => mkR "stx:r"       "stx:tai:s" "swMtIs"    "stCalIs"   "snx:tafnx:z=n" "stsQx:QI"   "sthtx:tr"   "stasI"    "snx:tanx:z=nbx:be" ; 

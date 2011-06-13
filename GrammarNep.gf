@@ -8,13 +8,13 @@
   NumeralNep,  
   SentenceNep,  
   QuestionNep,
- -- RelativePnb,
+  RelativeNep,
   ConjunctionNep,  
   PhraseNep,
   TextX - [Adv],  
   StructuralNep,  
-  TenseX - [Adv]
---  IdiomPnb 
+  TenseX - [Adv],
+  IdiomNep
   ** {
 
 flags startcat = Phr ; unlexer = text ; lexer = text ;

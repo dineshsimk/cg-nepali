@@ -18,12 +18,13 @@ concrete CatNep of Cat = CommonX - [Adv] ** open ResNep, Prelude in {
       s : ResNep.VPHTense => Polarity => Order => Str ;
       c2 : ResNep.Compl
       } ;
---    Imp = {s : CPolarity => ImpForm => Str} ;
+    Imp = {s : CPolarity => ImpForm => Str} ;
 
 ---- Question
 
     QCl = {s : ResNep.VPHTense => Polarity => QForm => Str} ;
     IP = {s: Case => Str  ; n : Number};
+    -- IDet = {s : Gender => Str ; n : Number} ;
     IDet = {s : Str ; n : Number} ;
     IQuant = {s : Number => Str} ;
 
@@ -33,7 +34,8 @@ concrete CatNep of Cat = CommonX - [Adv] ** open ResNep, Prelude in {
       s : ResNep.VPHTense => Polarity => Order => Agr => Str ; 
       c : Case
       } ;
---    RP = {s: Number => Case => Str ; a:RAgr};
+    --RP = {s: Number => Case => Str ; a:RAgr};
+    RP = {s: Case => Str ; a:RAgr};
 
 ---- Verb
 
@@ -59,7 +61,8 @@ concrete CatNep of Cat = CommonX - [Adv] ** open ResNep, Prelude in {
     Num  = {s : Str ; n : Number} ;
     Card = {s : Str; n : Number} ;
     Ord = {s : Str; n : Number} ;
-    Quant = {s:Number => Gender => Case => Str ; a:Agr}; -- ?? Number
+    --Quant = {s : Number => Gender => Case => Str ; a:Agr}; -- ?? Number
+    Quant = {s : Number => Gender => Str }; -- ?? Number
     Art = {s : Str} ;
 
 ---- Numeral

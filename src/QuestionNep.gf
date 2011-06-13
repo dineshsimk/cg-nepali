@@ -6,7 +6,7 @@ concrete QuestionNep of Question = CatNep ** open ResNep, Prelude in {
 
     QuestCl cl = {
       s = \\t,p,qf => case qf of { 
-	                  QDir => cl.s ! t ! p ! OQuest;
+	                  QDir   => cl.s ! t ! p ! OQuest;
                       QIndir => "yedi" ++ cl.s ! t! p ! ODir
 					  }
 				};	  
@@ -17,7 +17,7 @@ concrete QuestionNep of Question = CatNep ** open ResNep, Prelude in {
            qp2 = qp.s ! Ins
           in { s = \\t,p,o => case t of {
 --		             VPSmplPast => qp2 ++ cl.s ! t ! p ! ODir;
-					 _         => qp1 ++ cl.s ! t ! p ! ODir
+					 _          => qp1 ++ cl.s ! t ! p ! ODir
 					 }
 					}; 
 
@@ -33,15 +33,15 @@ concrete QuestionNep of Question = CatNep ** open ResNep, Prelude in {
         };
 
     QuestIAdv iadv cl = { 
-             s = \\t,p,_ => iadv.s ++ cl.s ! t ! p ! ODir;
-                      	};
+        s = \\t,p,_ => iadv.s ++ cl.s ! t ! p ! ODir;
+        } ;
 
     QuestIComp icomp np = 
      let cl = mkSClause (np.s ! NPC Nom ++ icomp.s) np.a (predAux auxBe); 
 	   in {
        s = \\t,p,qf => case qf of { 
-	      QDir =>   cl.s ! t ! p ! ODir;
-          QIndir => cl.s ! t! p ! ODir
+	      QDir   => cl.s ! t ! p ! ODir;
+          QIndir => cl.s ! t ! p ! ODir
 		  }
 		};
 
@@ -59,13 +59,16 @@ concrete QuestionNep of Question = CatNep ** open ResNep, Prelude in {
       } ;
 
     IdetIP idet = {
-     s = \\_ => idet.s ; 
+      s = \\_ => idet.s ; 
       n = idet.n;
       } ;
 
     IdetQuant iqant num = {
-      s = iqant.s ! num.n ++ num.s ; 
-      n = num.n
+      s = iqant.s ! num.n ++ num.s ;
+      --s = \\g => case g of {
+      --      _  => iqant.s ! num.n ++ num.s)
+      --      };
+      n = num.n ;
       } ;
 
     CompIAdv a = a ;

@@ -25,12 +25,12 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
         | Pers3_H ;
 		
 	Order = ODir | OQuest ;
-{-	
+	
 --2 For $Relative$
  
     RAgr = RNoAg | RAg Agr ;
     RCase = RC Number Case ;
--}
+
 -- for Numerial
    
    CardOrd = NCard | NOrd ;
@@ -51,7 +51,9 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
       VF VTense Aspect Polarity NPerson Number Gender
        | Root -- Root form 'kha' is the root of 'khanu'
        | Inf  -- Infinitive form 'khanau'
-       | PVForm ; -- Partial verb form 'khan' is teh PVForm of 'khanu'
+       | ProgRoot Aspect Number Gender
+       | PVForm  -- Partial verb form 'khan' is teh PVForm of 'khanu'
+       | Imp ;
       
   -- Aspect Perfective and non-perfective
     Aspect = Perf | Imperf ; 
@@ -67,6 +69,7 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
 --    DemPronForm = {s : Number => Gender => Case => Str};
 --    PossPronForm = {s : Number => Gender => Case => Str};
     --Determiner = {s : Number => Gender => Str ; n : Number};
+    
     Determiner = {s : Number => Gender => Str ; n : Number};
 {-  
 -- a useful oper
@@ -119,18 +122,18 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
   oper
 
     
-    np2pronCase :  (Case => Str) -> NPCase -> Agr -> Str = 
+    np2pronCase : (Case => Str) -> NPCase -> Agr -> Str = 
       \ppf,npc,a -> case npc of {
         NPC c => ppf ! c ;
         NPObj => ppf ! Nom ;
-        NPErg => ppf ! Nom ++ "le" 
-      } ;
+        NPErg => ppf ! Ins --Nom ++ "le" 
+        } ;
     
     
 	toNP : (Case => Str) -> NPCase -> Str = \pn, npc -> case npc of {
       NPC c => pn ! c ;
       NPObj => pn ! Nom ;
-      NPErg => pn ! Nom ++ "le"
+      NPErg => pn ! Ins --Nom ++ "le"
       } ;
 	
     -- ???? Hardcorded gender and Number
@@ -138,8 +141,8 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
     detcn2NP : (Determiner) -> Noun -> NPCase -> Number -> Str = \dt,cn,npc,nn -> case npc of {
        NPC c => dt.s ! dt.n ! Masc ++ cn.s ! nn ! c ;
        NPObj => dt.s ! dt.n ! Masc ++ cn.s ! nn ! Nom ;
-       NPErg => dt.s ! dt.n ! Masc ++ cn.s ! nn ! Nom ++ "le"
-      } ;  
+       NPErg => dt.s ! dt.n ! Masc ++ cn.s ! nn ! Ins --Nom ++ "le"
+       } ;  
     
     det2NP : (Determiner) -> NPCase -> Str = \dt,npc -> case npc of {
        NPC c => dt.s ! dt.n ! Masc ;
@@ -156,9 +159,10 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
     toAgr : Number -> NPerson -> Gender -> Agr = \n,p,g ->       
 	   Ag g n p;
       
-    fromAgr : Agr -> {n : Number ; p : NPerson ; g : Gender} = \a -> case a of {
-      Ag g n p => {n = n ; p = p ; g = g} 
-	  } ;
+    fromAgr : Agr -> {n : Number ; p : NPerson ; g : Gender} = 
+      \a -> case a of {
+       Ag g n p => {n = n ; p = p ; g = g} 
+	   } ;
 	
       
 	conjAgr : Agr -> Agr -> Agr = \a0,b0 -> 
@@ -169,17 +173,23 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
         b.p a.g;	  
 	
 	
-    giveNumber : Agr -> Number =\a -> case a of {
+    giveNumber : Agr -> Number = \a -> case a of {
 	   Ag _ n _ => n
 	};
-	giveGender : Agr -> Gender =\a -> case a of {
+    
+	giveGender : Agr -> Gender = \a -> case a of {
 	   Ag g _ _ => g
 	};
         
     defaultAgr : Agr = agrP3 Masc Sg ;
-    agrP3 : Gender -> Number -> Agr = \g,n -> Ag g n Pers3_L ;	
+    
+    agrP3 : Gender -> Number -> Agr = 
+      \g,n -> Ag g n Pers3_L ;	
+    
     personalAgr : Agr = agrP1 Masc Sg ;
-    agrP1 : Gender -> Number -> Agr = \g,n -> Ag g n Pers1 ;
+    
+    agrP1 : Gender -> Number -> Agr = 
+      \g,n -> Ag g n Pers1 ;
 	
  param
       CPolarity = 
@@ -187,10 +197,11 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
        | CNeg Bool ;  -- contracted or not
 
  oper
-    contrNeg : Bool -> Polarity -> CPolarity = \b,p -> case p of {
-    Pos => CPos ;
-    Neg => CNeg b
-    } ;
+    contrNeg : Bool -> Polarity -> CPolarity = 
+     \b,p -> case p of {
+       Pos => CPos ;
+       Neg => CNeg b
+       } ;
 
 
 	NP : Type = {s : NPCase => Str ; a : Agr} ;
@@ -288,6 +299,41 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
         <CFuture, Neg, Pers3_M, Pl,   _>  => "hunecEnE" ; -- हुनेछैनै
         <CFuture, Neg,       _,  _,   _>  => "hunuhunecEnx:" -- हुनुहुनेछैन्
     } ;
+    
+    copulaOpn : CTense -> Polarity -> Number -> NPerson -> Gender -> Str = 
+      \t, po, n, pn, g -> 
+      case <t,po,pn,n,g> of {
+        -- Resembles with "mkVPreNPReg" function for positive
+        -- <CPrsnt, Pos,      _,  _, _>  => mkVPreNPReg "" Pos pn n g ;
+        -- Present Positive
+        <CPrsnt, Pos, Pers1,   Sg,   _>  => "huV" ; -- हुँ
+        <CPrsnt, Pos, Pers1,   Pl,   _>  => "hwV" ; -- हौँ
+        <CPrsnt, Pos, Pers2_L, Sg,   _> => "hosx:" ; -- होस्
+        --<CPrsnt, Pos, Pers2_L, Sg, Fem>  => "hosx:" ; -- छेस्      
+        <CPrsnt, Pos, Pers2_L, Pl,   _>  => "hw" ; -- हौ
+        --<CPrsnt, Pos, Pers2_M, Pl, Fem>  => "cx:yw" ;  -- छ्यौ
+        <CPrsnt, Pos, Pers2_M,  _,   _>  => "hw" ; --  हौ
+        <CPrsnt, Pos, Pers3_L, Sg, Masc> => "ho" ;  -- हो
+        --<CPrsnt, Pos, Pers3_L, Sg, Fem>  => "hunx:" ; -- हुन्
+        <CPrsnt, Pos, Pers3_L,  _,   _>  => "hunx:" ;  -- हुन्     
+        --<CPrsnt, Pos, Pers3_M, Sg, Fem>  => "hw" ;  -- हौ
+        <CPrsnt, Pos, Pers3_M, _,    _>  => "hw" ;  -- हौ
+        <CPrsnt, Pos,      _ , _,    _>  => "hunuhunx:c" ; --हुनुहुन्छ
+          
+        -- Present Negative
+        <CPrsnt, Neg, Pers1,   Sg,   _>  => "hEn" ; -- 
+        <CPrsnt, Neg, Pers1,   Pl,   _>  => "hEnwM" ; -- हैनौं
+        <CPrsnt, Neg, Pers2_L, Sg,   _>  => "hEnsx:" ; -- हैनस्
+        <CPrsnt, Neg, Pers2_L, Pl,   _>  => "hEnw" ; -- हैनौ
+	    <CPrsnt, Neg, Pers2_M,  _,   _>  => "hEnw" ; -- हैनौ        
+        <CPrsnt, Neg, Pers3_L, Sg,   _>  => "hEn" ; --हैन
+        <CPrsnt, Neg, Pers3_L, Pl,   _>  => "hEnnx:" ; -- हैनन्
+        <CPrsnt, Neg, Pers3_M,  _,   _>  => "hEnnx:" ; -- हैनन्
+        <CPrsnt, Neg,       _,  _,   _>  => "hunuhunx:z+n" ; -- हुनुहुन्‌न
+        
+        <_,_,_,_,_> => copula t po n pn g 
+        } ;
+    
 
  
   param
@@ -338,7 +384,6 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
       inf : Str;
       ad  : Str;
       embComp : Str ;
-      --prog : Bool ;
       } ;
 	
 	VPHSlash = VPH ** {c2 : Compl} ;
@@ -348,9 +393,11 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
      {s = \\vf => 
 	   case vf of {
 	     VF t a pl p n g => {inf = verb.s ! VF t a pl p n g } ;
-		 Root => {inf = verb.s ! Root } ;
+	     Root => {inf = verb.s ! Root } ;
          Inf => {inf = verb.s ! Inf } ;
-         PVForm => {inf = verb.s ! PVForm } 
+	     Imp => {inf = verb.s ! Imp } ;
+         PVForm => {inf = verb.s ! PVForm } ;
+         ProgRoot a n g => {inf = verb.s ! ProgRoot a n g }  
 		 };
 	    obj = {s = [] ; a = defaultAgr} ;
 		subj = VIntrans ;
@@ -371,9 +418,8 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
     predVcc : (Verb **{c2:Compl}) -> VPHSlash = \verb ->
     predV verb ** {c2 = {s = "" ; c = VTrans} } ;
 ------------------------
-	 
-    raha : Gender -> Number -> Str = \g,n -> 
-	   (mkAdj1 "rya").s ! n ! g ! Dir ;
+-}	 
+{-       
     pya : Gender -> Number -> Str = \g,n -> 
 	   (mkAdj1 "pya").s ! n ! g ! Dir ;	   
 
@@ -405,6 +451,8 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
 	      VF (NFuture _) _ pl p n g => {inf = copula CFuture pl n p g } ;
 		  Root => { inf = verb.inf} ;
           Inf => {inf = verb.inf} ;
+	      Imp => {inf = verb.inf} ;
+          ProgRoot a n g => {inf = "" } ; 
           PVForm => {inf = ""} 
         };
        obj = {s = [] ; a = defaultAgr} ;
@@ -425,26 +473,34 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
      ppart = "" ;
      prpart = ""
      } ;
-  {-  
+    
+raha : VTense -> Aspect -> Gender -> Number -> NPerson -> {s:Str} = \t,a,g,n,p -> {
+  s = case <t,a,g,n,p> of {
+    <NPresent,Perf,Masc,Sg,Pers1> => "i:rhnx:" ;
+    <_,_,_,_,_> => "i:rhnx:" 
+    }
+  };
+
   predProg : VPH -> VPH = \verb -> {
      s = \\vh => 
        case vh of {
-         VPTense VPPres (Ag g n p) => {fin = copula CPrsnt n p g ; inf = (verb.s!VPTense VPPres (Ag g n p)).inf ++ pya g n} ;
-         VPTense VPPast (Ag g n p) => {fin = copula CPast n p g ; inf = (verb.s!VPTense VPPres (Ag g n p)).inf ++ pya g n} ;
-         VPTense VPFutr (Ag g n p) => {fin = copula CFuture n p g ; inf = (verb.s!VPTense VPPres (Ag g n p)).inf } ;
-	 VPTense VPPerf (Ag g n p) => {fin = copula CPast n p g ; inf = (verb.s!VPTense VPPres (Ag g n p)).inf ++ raha g n } ;
-         VPStem => {fin = []  ; inf = (verb.s!VPStem).inf };
-		 _ => {fin = [] ; inf = [] }
+         VF NPresent a pl p n g => {inf =  (verb.s ! ProgRoot a n g).inf ++ copula CPrsnt pl n p g } ;
+         VF (NPast _) a pl p n g => {inf = (verb.s ! ProgRoot a n g).inf ++ copula CPast pl n p g } ;
+         VF (NFuture _) a pl p n g => {inf = (verb.s ! ProgRoot a n g).inf ++ copula CFuture pl n p g } ;
+		 Root => {inf = (verb.s ! Root).inf } ;
+         Inf => {inf = (verb.s ! Inf).inf } ;
+	 Imp => {inf = (verb.s ! Imp).inf } ;
+         PVForm => {inf = (verb.s ! PVForm).inf } ;
+         ProgRoot a n g => {inf = (verb.s ! ProgRoot a n g).inf } 
 		 };
       obj = verb.obj ;
       subj =  VIntrans ;
       inf = verb.inf;
       ad = verb.ad;
       embComp = verb.embComp;
-      prog = True ;
+--      prog = True ;
       comp = verb.comp 
       } ;
- -}
    
    Clause : Type = {s : VPHTense => Polarity => Order => Str} ;
       
@@ -502,7 +558,7 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
                 OQuest => "ke" }; 
 		  
         in
-		quest ++ np.s ! subj ++ vp.obj.s ++ vp.ad ++ vp.comp ! np.a  ++  vps.inf ++ vp.embComp
+		quest ++ np.s ! subj ++ vp.ad ++ vp.obj.s ++ vp.comp ! np.a  ++  vps.inf ++ vp.embComp
 		--quest ++ np.s ! subj ++ vp.ad ++ vp.comp ! np.a ++ vp.obj.s ++ vps.inf ++ vp.embComp
       } ;
 
@@ -546,7 +602,7 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
 		  
         in
 		quest ++ subj ++ vp.obj.s ++ vp.ad ++ vp.comp ! agr  ++  vps.inf ++ vp.embComp
-		--quest ++ np.s ! subj ++ vp.ad ++ vp.comp ! np.a ++ vp.obj.s ++ vps.inf ++ vp.embComp
+	--	quest ++ subj ++ vp.ad ++ vp.comp ! agr ++ vp.obj.s ++ vps.inf ++ vp.embComp
       } ;
  {-   
     insertSubj : PPerson -> Str -> Str = \p,s -> 
@@ -630,7 +686,6 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
      subj = vp.subj ;
 	 ad = vp.ad ;
      embComp = vp.embComp;
---     prog = vp.prog ;
      comp = \\a =>   obj ! a  ++ vp.c2.s ++ vp.comp ! a 
     } ;
 
@@ -641,7 +696,6 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
 	 subj = vp.subj;
      ad  = vp.ad ++ ad ;
      embComp = vp.embComp;
-    -- prog = vp.prog ;
      comp = vp.comp
     } ;
     

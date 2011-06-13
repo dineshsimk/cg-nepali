@@ -29,8 +29,8 @@ oper
   mkN2 : N -> Prep -> Str -> N2;
   mkN2 = \n,p,c -> n ** {lock_N2 = <> ; c2 = p.s ; c3 = c } ; 
   
-  mkN3 : N -> Prep -> Str -> Str-> N3 ;
-  mkN3 = \n,p,q,r -> n ** {lock_N3 = <> ; c2 = p.s ; c3 = q ; c4 = r} ;
+  mkN3 : N -> Prep -> Prep -> Str-> N3 ;
+  mkN3 = \n,p,q,r -> n ** {lock_N3 = <> ; c2 = p.s ; c3 = q.s ; c4 = r} ;
   
 -- Compound Nouns  
 
@@ -64,13 +64,18 @@ oper
   demoPN : Str -> Str -> Str -> Quant =
     \s1,s2,s3 -> let n = makeDemonPronForm s1 s2 s3 in {s = n.s ; a = defaultAgr ; lock_Quant = <>};
 -}
--- Determiner    
---  mkDet : Str -> Str -> Number -> Det =
---    \s1,s2,nb -> let dt = makeDet s1 s2 nb in {s = dt.s ; n = nb ; lock_Det = <>};
-
+--  Determiner    
+   mkDet = overload {
+     mkDet : (s1,s2:Str) -> Number -> Det =
+       \s1,s2,nb -> let dt = makeDet s1 s1 s2 s2 nb in {s = dt.s ; n = nb ; lock_Det = <>};
+     
+     mkDet : (s1,s2,s3,s4:Str) -> Number -> Det =
+       \s1,s2,s3,s4,nb -> let dt = makeDet s1 s2 s3 s4 nb in {s = dt.s ; n = nb ; lock_Det = <>};
+     } ;
+   
 -- Intergative pronouns    
-  mkIP : (x1,x2,x3,x4:Str) -> Number -> IP =
-   \s1,s2,s3,s4,n -> let p = mkIntPronForm s1 s2 s3 s4 in { s = p.s ; n = n ;  lock_IP = <>}; 
+   mkIP : (x1,x2,x3,x4:Str) -> Number -> IP =
+     \s1,s2,s3,s4,n -> let p = mkIntPronForm s1 s2 s3 s4 in { s = p.s ; n = n ;  lock_IP = <>}; 
 
   
 --2 Adjectives
@@ -96,7 +101,7 @@ oper
       = \v, p -> v ** {c2 = {s = p ; c = VTrans} ; lock_V2 = <>} ;
     } ;
   
-  mkV3 : V -> Str -> Str -> V3;
+  mkV3 : V -> Str -> Str -> V3 ;
   mkV3 v p q = v ** { c2 = p ; c3 = q ; lock_V3 = <>} ;
   
   mkV2V : V -> Str -> Str -> Bool -> V2V ;
@@ -135,18 +140,22 @@ oper
   
   noPrep : Prep ;
   noPrep = mkPrep [] ;
-  
 
-{-    
+    
 --3 Determiners and quantifiers
+    
+  mkQuant = overload  {
+    --mkQuant : Pron -> Quant = \p -> {s = \\_,_,c => p.s!c ; lock_Quant = <>};    
+    mkQuant : (s1,s2,s3,s4:Str) -> Quant = 
+      \sm,sf,pm,pf -> {s = (makeQuant sm sf pm pf).s ; lock_Quant = <>};
+    
+    mkQuant : (s1,s2:Str) -> Quant = 
+      \sg,pl -> {s = (makeQuant sg sg pl pl).s ; lock_Quant = <>};
+    } ;
 
---  mkQuant : overload {
-    mkQuant : Pron -> Quant ;
---    mkQuant : (no_sg, no_pl, none_sg, non_pl : Str) -> Quant ;
---  } ;
-  
+{-  
 --  mkQuant = overload {
-    mkQuant : Pron -> Quant = \p -> {s = \\_,_,c => p.s!c ;a = p.a ; lock_Quant = <>};
+--    mkQuant : Pron -> Quant = \p -> {s = \\_,_,c => p.s!c ;a = p.a ; lock_Quant = <>};
 --    mkQuant : (no_sg, no_pl, none_sg, non_pl : Str) -> Quant = mkQuantifier;
 --  } ;
 
