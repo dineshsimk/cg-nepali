@@ -23,9 +23,9 @@ concrete CatNep of Cat = CommonX - [Adv] ** open ResNep, Prelude in {
 ---- Question
 
     QCl = {s : ResNep.VPHTense => Polarity => QForm => Str} ;
-    IP = {s: Case => Str  ; n : Number};
-    -- IDet = {s : Gender => Str ; n : Number} ;
-    IDet = {s : Str ; n : Number} ;
+    IP = {s: Case => Str  ; n : Number} ;
+    IDet = {s : Gender => Str ; n : Number} ;
+    --IDet = {s : Str ; n : Number} ;
     IQuant = {s : Number => Str} ;
 
 ---- Relative
@@ -41,7 +41,7 @@ concrete CatNep of Cat = CommonX - [Adv] ** open ResNep, Prelude in {
 
     VP = ResNep.VPH ;
     VPSlash = ResNep.VPHSlash ;
-    Comp = {s : Agr => Str} ;
+    Comp = {s : Agr => Str ; t : NType} ;
     
 ---- Adv    
     Adv = {s : Str} ;
@@ -54,15 +54,14 @@ concrete CatNep of Cat = CommonX - [Adv] ** open ResNep, Prelude in {
 
     CN = ResNep.Noun ;
     NP = ResNep.NP ;
-    -- ps genetive case
-    Pron = {s : Case => Str ; ps : Str ; a : Agr} ; -- ?? What is ps and why for 
+    Pron = {s : Case => Str ; ps : Str ; a : Agr} ; -- ps genetive case
     Det = ResNep.Determiner ;
     Predet = {s : Str} ;
     Num  = {s : Str ; n : Number} ;
     Card = {s : Str; n : Number} ;
     Ord = {s : Str; n : Number} ;
     --Quant = {s : Number => Gender => Case => Str ; a:Agr}; -- ?? Number
-    Quant = {s : Number => Gender => Str }; -- ?? Number
+    Quant = {s : Number => Gender => Str } ; -- ?? Number
     Art = {s : Str} ;
 
 ---- Numeral
@@ -92,9 +91,9 @@ concrete CatNep of Cat = CommonX - [Adv] ** open ResNep, Prelude in {
     A = ResNep.npAdjective ; --- {s : Gender => Number => Str} ;
     A2 = ResNep.npAdjective ** {c2 : Str} ;
     
-    N = {s : Number => Case => Str ; g : Gender} ;
+    N = ResNep.Noun ;--{s : Number => Case => Str ; g : Gender ; t : NType ; h : NPerson} ;
 
-    N2 = {s : Number => Case => Str ; g : Gender} ** {c2 : Str ; c3 : Str } ;
-    N3 = {s : Number => Case => Str ; g : Gender} ** {c2 : Str ; c3 : Str ; c4 : Str} ;
-    PN = {s : Case => Str ; g : Gender} ;
+    N2 = ResNep.Noun ** {c2 : Str ; c3 : Str} ;
+    N3 = ResNep.Noun ** {c2 : Str ; c3 : Str ; c4 : Str} ;
+    PN = {s : Case => Str ; g : Gender ; t : NType ; h : NPerson } ;
 }

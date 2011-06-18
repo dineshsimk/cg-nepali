@@ -7,11 +7,11 @@ concrete PhraseNep of Phrase = CatNep ** open Prelude, ResNep in {
     UttQS qs = {s = qs.s ! QDir} ;
     
     -- be a man -> (मन्छे हउ)
-    UttImpSg pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg False ++ "हउ"} ;
+    UttImpSg pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg False ++ "hf"} ;
     
-    UttImpPl pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Pl False ++ "हआ"} ;
+    UttImpPl pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Pl False ++ "hA"} ;
     
-    UttImpPol pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg True ++ "हउ"} ;
+    UttImpPol pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg True ++ "hf"} ;
 
     UttIP ip = {s = ip.s ! Nom} ; --- Acc also
     UttIAdv iadv = iadv ;

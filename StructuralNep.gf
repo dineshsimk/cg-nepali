@@ -25,9 +25,9 @@ concrete StructuralNep of Structural = CatNep **
     can8know_VV,can_VV = mkV "सक्नु" ** { isAux = True} ;
     during_Prep = mkPrep "पर्यान्त" ; -- पर्यान्त
     either7or_DConj = sd2 "अथवा" "या" ** {n = Sg} ; -- अथवा , या
-    everybody_NP =  MassNP (UseN (regN "सवौ जाना")) ; -- not a good way coz need to include NounPun (सवौ जाना)
+    everybody_NP =  MassNP (UseN (regN "सवौ जाना" Living)) ; -- not a good way coz need to include Noun (सवौ जाना)
     every_Det = mkDet "सबै" "हरेक" Sg ; -- सबै, हरेक
-    everything_NP = MassNP (UseN (regN "हारेक कुरा")) ; -- हारेक कुरा
+    everything_NP = MassNP (UseN (regN "हारेक कुरा" NonLiving)) ; -- हारेक कुरा
     everywhere_Adv = mkAdv "जाता ततै" ; -- जाता ततै
     few_Det = mkDet "थोरै" "अलिकती" Pl ; -- थोरै, अलिकती
 --  d    first_Ord = {s = "पेहला" ; n = Sg} ; --DEPRECATED
@@ -49,7 +49,7 @@ concrete StructuralNep of Structural = CatNep **
     here7from_Adv = mkAdv ["यहाँ बाट"] ; -- यहाँ बाट
     how_IAdv = ss "कसरी" ; -- कसरी
     how8much_IAdv  = ss "कती" ; -- कती
-    --how8many_IDet = mkDet "कती वटा" "कती वटी" Pl ;  -- काती वटा, कती वटी (incase of mumans it becomes, 'kati jana') NEEDS FIX
+    how8many_IDet = mkIDetn "कती वटा" "कती वटी" Pl ;  -- काती वटा, कती वटी (incase of humans it becomes, 'kati jana') NEEDS FIX
     if_Subj = ss "यदि" ; -- यदि
     in8front_Prep = mkPrep "सामु" ; -- सामु      
     in_Prep = mkPrep "मा" ; -- मा    
@@ -83,11 +83,11 @@ concrete StructuralNep of Structural = CatNep **
     please_Voc = ss "कृपया" ; -- कृपया
     possess_Prep = mkPrep "धारणा गर्नु" ; -- धारणा गर्नु
     quite_Adv = ss "एकदम" ; -- एकदम    
-    so_Ada = mkAdA "यस कारण" ; -- यस कारण ???? NEED TO CHECK
-    somebody_NP = MassNP (UseN (regN "कोही")); -- कोही
+    so_AdA = mkAdA "यस कारण" ; -- यस कारण ???? NEED TO CHECK
+    somebody_NP = MassNP (UseN (regN "कोही" Living)); -- कोही
     someSg_Det = mkDet "कोही" "केही" Sg ;
     somePl_Det = mkDet "कोही" "केही" Pl ;
-    something_NP = MassNP (UseN (regN "केही  कुरा")) ;
+    something_NP = MassNP (UseN (regN "केही  कुरा" NonLiving)) ;
     somewhere_Adv = mkAdv "कहीं" ; -- कहीं
     that_Quant = mkQuant "त्ये" "यिनीहरु" ;
     that_Subj = ss "त्यो"; -- त्यो
@@ -97,10 +97,10 @@ concrete StructuralNep of Structural = CatNep **
     therefore_PConj = ss "अतः" ; -- अतः    
     this_Quant = mkQuant "यो" "यि" ;
     through_Prep = mkPrep "मार्फत" ; -- मार्फत
-    too_Ada = mkAdA "पनि" ; -- पनि
+    too_AdA = mkAdA "पनि" ; -- पनि
     to_Prep = ss "सम्म" ; --
     under_Prep = mkPrep "अन्तर्गत" ; -- अन्तर्गत
-    very_Ada = mkAdA "धेरै" ; -- धेरै
+    very_AdA = mkAdA "धेरै" ; -- धेरै
     want_VV = mkV "चाहनु" ** { isAux = False} ;    
     whatSg_IP = mkIP "के" "के" "के" "" Sg ;
     whatPl_IP = mkIP "के" "के" "के" "" Pl ;
@@ -123,7 +123,7 @@ concrete StructuralNep of Structural = CatNep **
     at_least_AdN = mkAdN "कमसेकम" ; -- कमसेकम
     at_most_AdN = mkAdN "बढीमा" ; -- बढीमा
     nothing_NP = MassNP (UseN (regN "केही पनी")) ; -- केही पनी
-    nobody_NP = MassNP (UseN (regN "केही पनी")) ; --कोही पनी
+    nobody_NP = MassNP (UseN (regN "केही पनी" living)) ; --कोही पनी
     except_Prep = mkPrep "बाहेक" ; -- बाहेक
     as_CAdv = {s = "जत्तीकै" ; p = ""} ;  -- जत्तीकै
     have_V2 = mkV2 (mkV "हुनु") "" ; -- हुनु

@@ -9,11 +9,10 @@ concrete ConjunctionNep of Conjunction =
     ConjS  = conjunctDistrSS  ;
 
     ConjAdv = conjunctDistrSS ;
---    ConjAdv conj advs = conjunctDistrTable Gender conj advs ;
 
     ConjNP conj ss = conjunctDistrTable NPCase conj ss ** {
       a = conjAgr (agrP3 Masc conj.n) ss.a ;
---      isPron = ss.isPron ;
+      t = ss.t ;
       } ;
 
     ConjAP conj ss = conjunctDistrTable2 Number Gender conj ss ; 
@@ -27,17 +26,17 @@ concrete ConjunctionNep of Conjunction =
     BaseAdv x y = twoSS x y  ;
     ConsAdv = consrSS comma ;
 --    ConsAdv xs x = consrTable Gender comma xs x ;
-    BaseNP x y = twoTable NPCase x y ** {a = conjAgr x.a y.a ; isPron = andB x.isPron y.isPron} ;
+    BaseNP x y = twoTable NPCase x y ** {a = conjAgr x.a y.a ; t = x.t} ;
     BaseRS x y = twoTable Agr x y ** {c = x.c};
-    ConsNP xs x = consrTable NPCase comma xs x ** {a = conjAgr xs.a x.a } ;
+    ConsNP xs x = consrTable NPCase comma xs x ** {a = conjAgr xs.a x.a ; t = xs.t } ;
     ConsRS xs x = consrTable Agr comma xs x ** { c = xs.c};
-    BaseAP x y = twoTable2 Number Gender x y ; -- ** {isPre = andB x.isPre y.isPre} ;
-    ConsAP xs x = consrTable2 Number Gender comma xs x ;-- ** {isPre = andB xs.isPre x.isPre} ;
+    BaseAP x y = twoTable2 Number Gender x y ; 
+    ConsAP xs x = consrTable2 Number Gender comma xs x ;
 
   lincat
     [S] = {s1,s2 : Str} ;
     [Adv] = {s1,s2 : Str} ;
-    [NP] = {s1,s2 : NPCase => Str ; a : Agr } ;
+    [NP] = {s1,s2 : NPCase => Str ; a : Agr ; t : NType} ;
     [AP] = {s1,s2 : Number => Gender => Str} ;
     [RS] = {s1,s2 : Agr => Str ; c : Case};
 

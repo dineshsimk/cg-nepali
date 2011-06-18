@@ -2,5 +2,5 @@
 
 concrete AllNep of AllNepAbs =
   LangNep
---  ExtraPnb
+--  ExtraNep
   ** {} ;

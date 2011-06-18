@@ -1,6 +1,6 @@
 concrete NumeralNep of Numeral = CatNep ** open ResNep, Prelude in {
 -- By Harald Hammarstroem
--- Modification for Punjabi by Shafqat Virk
+-- Modification for Nepali by Dinesh and Shafqat Virk - 2011
  flags coding=utf8 ;
 
 
@@ -21,7 +21,7 @@ lincat Sub1000000 = {s : Str ; n : Number } ;
 lin num x0 = 
     {s = table {
           NCard => x0.s ; 
-          NOrd  => x0.s ++ "wV"  -- need to use mkOrd x0.s but it gives linking error 
+          NOrd  => Prelude.glue x0.s "wV"  -- need to use mkOrd x0.s but it gives linking error 
           };
        n = x0.n
     } ; 
@@ -57,9 +57,10 @@ oper
     } ; 
 
   -- REF http://dsal.uchicago.edu/dictionaries/schmidt/
+  -- Ordinals from One - Hundred are irregular
   rows : DSize => DSize => Str = table {
     sg => mkR "e:Gar"       "e:kx:kai:s" "e:ktIs"   "e:kCalIs"  "e:kafnx:z=n"   "e:ksQx:QI"  "e:khtx:tr"  "e:kasI"   "e:kanx:z=nbx:be" ;  
-    r2 => mkR "bahx:r"      "bai:s"      "btx:tIs"   "byalIs"    "bafnx:z=n"     "bEsQx:QI"   "bhtx:tr"    "byasI"    "byanx:z=nbx:be" ; 
+    r2 => mkR "bahx:r"      "bai:s"      "btx:tIs"  "byalIs"    "bafnx:z=n"     "bEsQx:QI"   "bhtx:tr"    "byasI"    "byanx:z=nbx:be" ; 
     r3 => mkR "tehx:r"      "tei:s"     "tetx:tIs"  "tx:riCalIs" "tx:ripnx:z=n" "tx:risQx:QI" "tx:rihtx:tr" "tx:riyasI" "tx:riyanx:z=nbx:be" ;
     r4 => mkR "CwD"         "CwbIs"     "CwMtIs"    "CvalIs"    "Cvnx:z=n"      "CwsQx:QI"   "Cwhtx:tr"   "CwrasI"   "Cwranx:z=nbx:be"; 
     r5 => mkR "pnx:Dx:r"    "pCx:CIs"   "pEMtIs"    "pEMtalIs"  "pCpnx:z=n"     "pEMsQx:QI"  "pChtx:tr"   "pCasI"    "pnx:Canx:z=nbx:be" ; 

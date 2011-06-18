@@ -11,4 +11,4 @@ rf -file=src/IdiomNep.gf      | ps -env=quotes -to_devanagari | wf -file=IdiomNe
 rf -file=src/SymbolNep.gf     | ps -env=quotes -to_devanagari | wf -file=SymbolNep.gf
 rf -file=src/VerbNep.gf       | ps -env=quotes -to_devanagari | wf -file=VerbNep.gf
 rf -file=src/SentenceNep.gf   | ps -env=quotes -to_devanagari | wf -file=SentenceNep.gf
-
+rf -file=src/PhraseNep.gf     | ps -env=quotes -to_devanagari | wf -file=PhraseNep.gf

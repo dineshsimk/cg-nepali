@@ -1,6 +1,6 @@
 concrete NumeralNep of Numeral = CatNep ** open ResNep, Prelude in {
 -- By Harald Hammarstroem
--- Modification for Punjabi by Shafqat Virk
+-- Modification for Nepali by Dinesh and Shafqat Virk - 2011
  flags coding=utf8 ;
 
 
@@ -21,7 +21,7 @@ lincat Sub1000000 = {s : Str ; n : Number } ;
 lin num x0 = 
     {s = table {
           NCard => x0.s ; 
-          NOrd  => x0.s ++ "ौँ"  -- need to use mkOrd x0.s but it gives linking error 
+          NOrd  => Prelude.glue x0.s "ौँ"  -- need to use mkOrd x0.s but it gives linking error 
           };
        n = x0.n
     } ; 
@@ -57,9 +57,10 @@ oper
     } ; 
 
   -- REF http://dsal.uchicago.edu/dictionaries/schmidt/
+  -- Ordinals from One - Hundred are irregular
   rows : DSize => DSize => Str = table {
     sg => mkR "एघार"       "एक्काइस" "एकतीस"   "एकचालीस"  "एकाउन्‍न"   "एकसठ्ठी"  "एकहत्तर"  "एकासी"   "एकान्‍नब्बे" ;  
-    r2 => mkR "बाह्र"      "बाइस"      "बत्तीस"   "बयालीस"    "बाउन्‍न"     "बैसठ्ठी"   "बहत्तर"    "बयासी"    "बयान्‍नब्बे" ; 
+    r2 => mkR "बाह्र"      "बाइस"      "बत्तीस"  "बयालीस"    "बाउन्‍न"     "बैसठ्ठी"   "बहत्तर"    "बयासी"    "बयान्‍नब्बे" ; 
     r3 => mkR "तेह्र"      "तेइस"     "तेत्तीस"  "त्रिचालीस" "त्रिपन्‍न" "त्रिसठ्ठी" "त्रिहत्तर" "त्रियासी" "त्रियान्‍नब्बे" ;
     r4 => mkR "चौध"         "चौबीस"     "चौंतीस"    "चवालीस"    "चवन्‍न"      "चौसठ्ठी"   "चौहत्तर"   "चौरासी"   "चौरान्‍नब्बे"; 
     r5 => mkR "पन्ध्र"    "पच्चीस"   "पैंतीस"    "पैंतालीस"  "पचपन्‍न"     "पैंसठ्ठी"  "पचहत्तर"   "पचासी"    "पन्चान्‍नब्बे" ; 

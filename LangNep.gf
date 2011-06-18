@@ -1,4 +1,4 @@
---# -path=.:../abstract:../common:../hindustani
+--# -path=.:../abstract:../common
 
 concrete LangNep of Lang = 
   GrammarNep,

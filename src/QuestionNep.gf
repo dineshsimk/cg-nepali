@@ -1,34 +1,37 @@
 concrete QuestionNep of Question = CatNep ** open ResNep, Prelude in {
+  
   flags optimize=all_subs ;
-    coding = utf8;
+  coding = utf8;
 
   lin
 
     QuestCl cl = {
-      s = \\t,p,qf => case qf of { 
-	                  QDir   => cl.s ! t ! p ! OQuest;
-                      QIndir => "yedi" ++ cl.s ! t! p ! ODir
-					  }
-				};	  
+      s = \\t,p,qf => 
+         case qf of { 
+	        QDir   => cl.s ! t ! p ! OQuest;
+            QIndir => "yedi" ++ cl.s ! t ! p ! ODir
+			}
+		} ;	  
 
     QuestVP qp vp = 
-       let cl = mkSClause ("") (Ag Masc qp.n Pers3_L) vp;
+       let cl  = mkSClause ("") (Ag Masc qp.n Pers3_L) vp; -- Pers3_M
            qp1 = qp.s ! Nom;
            qp2 = qp.s ! Ins
-          in { s = \\t,p,o => case t of {
---		             VPSmplPast => qp2 ++ cl.s ! t ! p ! ODir;
-					 _          => qp1 ++ cl.s ! t ! p ! ODir
-					 }
-					}; 
+           in { s = \\t,p,o => 
+              case t of {
+-- 	           VPSmplPast => qp2 ++ cl.s ! t ! p ! ODir ;
+	           _          => qp1 ++ cl.s ! t ! p ! ODir
+               }
+			} ; 
 
 
     QuestSlash ip slash = 
-     let ip1 = ip.s ! Nom;
-         ip2 = ip.s ! Ins
-     in {
-      s = \\t,p,o => case t of { 
---            VPSmplPast => ip2 ++ slash.s ! t ! p ! ODir;
-            _         => ip1 ++ slash.s ! t ! p ! ODir
+      let ip1 = ip.s ! Nom;
+          ip2 = ip.s ! Ins
+          in {
+          s = \\t,p,o => case t of { 
+--            VPSmplPast => ip2 ++ slash.s ! t ! p ! ODir ;
+              _          => ip2 ++ slash.s ! t ! p ! ODir
             }
         };
 
@@ -37,7 +40,7 @@ concrete QuestionNep of Question = CatNep ** open ResNep, Prelude in {
         } ;
 
     QuestIComp icomp np = 
-     let cl = mkSClause (np.s ! NPC Nom ++ icomp.s) np.a (predAux auxBe); 
+     let cl =  mkSClause (np.s ! NPC Nom ++ icomp.s) np.a (predAux NonLiving) ;--(predAux np.t); to test mkQCl-IAdv-NP-QCl                     
 	   in {
        s = \\t,p,qf => case qf of { 
 	      QDir   => cl.s ! t ! p ! ODir;
@@ -54,20 +57,17 @@ concrete QuestionNep of Question = CatNep ** open ResNep, Prelude in {
       } ;
  
     IdetCN idet cn = {
-      s = \\c => idet.s ++ cn.s ! idet.n ! c ; 
+      s = \\c => idet.s ! Masc++ cn.s ! idet.n ! c ; 
 	  n = idet.n;
       } ;
 
     IdetIP idet = {
-      s = \\_ => idet.s ; 
+      s = \\_ => idet.s ! Masc ; 
       n = idet.n;
       } ;
 
     IdetQuant iqant num = {
-      s = iqant.s ! num.n ++ num.s ;
-      --s = \\g => case g of {
-      --      _  => iqant.s ! num.n ++ num.s)
-      --      };
+      s =\\_ => iqant.s ! num.n ++ num.s ;
       n = num.n ;
       } ;
 
