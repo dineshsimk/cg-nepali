@@ -5,8 +5,7 @@
 - Go to http://www.grammaticalframework.org/ to know more about Grammatical Framework(GF)
 
 
-- To get the synopses of how different categories of words are translated in Nepali please go to  http://www.grammaticalframework.org/lib/doc/synopsis.html you can find all the Syntax Rules and Structural Words there, just hover over the word you will get the translations in all languages including Nepali. There are few known errors which i will document here, other than that if you find any errors please let me know at
-  dineshsimk [at] gmail [dot] com
+- To get the synopses of how different categories of words are translated in Nepali please go to  http://www.grammaticalframework.org/lib/doc/synopsis.html you can find all the Syntax Rules and Structural Words there, just hover over the word you will get the translations in all languages including Nepali. There are few known errors which i will document here.
 
 
 
