@@ -1,9 +1,9 @@
 See the page http://www.grammaticalframework.org/download/index.html 
-for downloading installing Grammatical Framework(GF). At this stage 
-it is advised to install from source to get the Nepali resource grammar 
+to download and install Grammatical Framework(GF). At this stage 
+it is recomended to install GF from source to get the Nepali resource grammar 
 along with GF.
 
-This gitbut repository is just for the Nepali resource grammar, you can 
+This github repository is just for the Nepali resource grammar, you can 
 find the latest development code here, it doesn't work separately you 
 need to have GF installed to get this running. These sources uses its own 
 transliteration system that is close to developed by MPP.You can see the 
