@@ -1,6 +1,7 @@
 --# -path=.:../abstract:../common:../../prelude
 --
 --1 Nep auxiliary operations.
+--  by Dinesh SImkhada and Shafqat Virk - 2011
 --
 -- This module contains operations that are needed to make the
 -- resource syntax work. 
@@ -121,16 +122,16 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
   
     np2pronCase : (Case => Str) -> NPCase -> Agr -> Str = 
       \ppf,npc,a -> case npc of {
-        NPC c => ppf ! c ;
-        NPObj => ppf ! Nom ;
-        NPErg => ppf ! Ins --Nom ++ "le" 
-        } ;    
+       NPC c => ppf ! c ;
+       NPObj => ppf ! Nom ;
+       NPErg => ppf ! Ins --Nom ++ "le" 
+       } ;    
     
 	toNP : (Case => Str) -> NPCase -> Str = \pn, npc -> case npc of {
-      NPC c => pn ! c ;
-      NPObj => pn ! Nom ;
-      NPErg => pn ! Ins --Nom ++ "le"
-      } ;
+       NPC c => pn ! c ;
+       NPObj => pn ! Nom ;
+       NPErg => pn ! Ins --Nom ++ "le"
+       } ;
 	
     detcn2NP : (Determiner) -> Noun -> NPCase -> Number -> Str = \dt,cn,npc,nn -> case npc of {
        NPC c => dt.s ! dt.n ! Masc ++ cn.s ! nn ! c ;
@@ -142,7 +143,7 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
        NPC c => dt.s ! dt.n ! Masc ;
        NPObj => dt.s ! dt.n ! Masc ;
        NPErg => dt.s ! dt.n ! Masc ++ "le"
-      } ;    
+       } ;    
 
 ------------------------------------
 -- Agreement transformations
@@ -206,19 +207,19 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
 
      
     VPHTense = 
-       VPGenPres   -- impf hum       nahim    "I go"
-     | VPSmplPast  -- impf Ta        nahim    "I went"
-	 | VPFut       -- fut            na/nahim "I shall go"
-     | VPPerfPres  -- perf hum       na/nahim "I have gone"
-     | VPPerfPast  -- perf Ta        na/nahim "I had gone"          
-	 | VPPerfFut
-     | VPCondPres  -- subj           na       "I may go"
-     | VPCondPast  -- subj           na       "I may go"
+       VPGenPres                   -- impf hum       nahim    "I go"
+     | VPSmplPast  --# notpresent  -- impf Ta        nahim    "I went"
+	 | VPFut       --# notpresent  -- fut            na/nahim "I shall go"
+     | VPPerfPres                  -- perf hum       na/nahim "I have gone"
+     | VPPerfPast  --# notpresent  -- perf Ta        na/nahim "I had gone"          
+	 | VPPerfFut   --# notpresent
+     | VPCondPres                  -- subj           na       "I may go"
+     | VPCondPast  --# notpresent  -- subj           na       "I may go"
      ;
        
     VType = VIntrans | VTrans | VTransPost ;
     
-    -- Tense defined for coupla
+    -- Tense defined for coupla case
     CTense = CPrsnt | CPast | CFuture ;
 
   
@@ -261,8 +262,8 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
         comp = \\_ => []
       } ;
 
-    predVc : (Verb ** {c2,c1 : Str}) -> VPHSlash = \verb -> 
-    predV verb ** {c2 = {s = verb.c1 ; c = VTrans} } ;
+    predVc : (Verb ** {c2,c1 : Str}) -> VPHSlash = \verb ->     
+      predV verb ** {c2 = {s = verb.c1 ; c = VTrans} } ;
 
 
 	predAux :  NType -> VPH =\ctype ->  {
@@ -295,8 +296,8 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
      s = \\vh => 
        case vh of {
          VF NPresent a pl p n g => {inf =  (verb.s ! ProgRoot a n g).inf ++ copulaPrGen pl n p g} ;
-         VF (NPast _) a pl p n g => {inf = (verb.s ! ProgRoot a n g).inf ++ copulaPsGen pl n p g} ;
-         VF (NFuture _) a pl p n g => {inf = (verb.s ! ProgRoot a n g).inf ++ copulaFtGen pl n p g} ;
+         VF (NPast _) a pl p n g => {inf = (verb.s ! ProgRoot a n g).inf ++ copulaPsGen pl n p g} ; --# notpresent
+         VF (NFuture _) a pl p n g => {inf = (verb.s ! ProgRoot a n g).inf ++ copulaFtGen pl n p g} ; --# notpresent
 		 
          Root => {inf = (verb.s ! Root).inf } ;
          Inf => {inf = (verb.s ! ProgRoot Imperf Sg Masc).inf } ;
@@ -340,22 +341,22 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
             vps  = case <vt,b> of {
                <VPGenPres,Pos>  => vp.s ! VF NPresent Imperf Pos p n g ;
                <VPGenPres,Neg>  => vp.s ! VF NPresent Imperf Neg p n g ;
-               <VPFut,Pos>      => vp.s ! VF (NFuture Defin) Imperf Pos p n g ;
-               <VPFut,Neg>      => vp.s ! VF (NFuture Defin) Imperf Neg p n g ;
-               <VPSmplPast,Pos> => vp.s ! VF (NPast Simpl) Imperf Pos p n g ;
-               <VPSmplPast,Neg> => vp.s ! VF (NPast Simpl) Imperf Neg p n g ;
+               <VPFut,Pos>      => vp.s ! VF (NFuture Defin) Imperf Pos p n g ; --# notpresent
+               <VPFut,Neg>      => vp.s ! VF (NFuture Defin) Imperf Neg p n g ; --# notpresent
+               <VPSmplPast,Pos> => vp.s ! VF (NPast Simpl) Imperf Pos p n g ; --# notpresent
+               <VPSmplPast,Neg> => vp.s ! VF (NPast Simpl) Imperf Neg p n g ; --# notpresent
                
                <VPPerfPres,Pos> => vp.s ! VF NPresent Perf Pos p n g ;
                <VPPerfPres,Neg> => vp.s ! VF NPresent Perf Neg p n g ;
-               <VPPerfPast,Pos> => vp.s ! VF (NPast Simpl) Perf Pos p n g ;
-               <VPPerfPast,Neg> => vp.s ! VF (NPast Simpl) Perf Neg p n g ;
-               <VPPerfFut,Pos>  => vp.s ! VF (NFuture Defin) Perf Pos p n g ;
-               <VPPerfFut,Neg>  => vp.s ! VF (NFuture Defin) Perf Neg p n g ;
+               <VPPerfPast,Pos> => vp.s ! VF (NPast Simpl) Perf Pos p n g ; --# notpresent
+               <VPPerfPast,Neg> => vp.s ! VF (NPast Simpl) Perf Neg p n g ; --# notpresent
+               <VPPerfFut,Pos>  => vp.s ! VF (NFuture Defin) Perf Pos p n g ; --# notpresent
+               <VPPerfFut,Neg>  => vp.s ! VF (NFuture Defin) Perf Neg p n g ; --# notpresent
   
                 <VPCondPres, Pos> => vp.s ! VF (NFuture Defin) Imperf Pos p n g ;
                 <VPCondPres, Neg> => vp.s ! VF (NFuture Defin) Imperf Neg p n g ;
-                <VPCondPast, Pos> => vp.s ! VF (NPast Hab) Perf Pos p n g ;
-                <VPCondPast, Neg> => vp.s ! VF (NPast Hab) Perf Neg p n g 
+                <VPCondPast, Pos> => vp.s ! VF (NPast Hab) Perf Pos p n g ; --# notpresent
+                <VPCondPast, Neg> => vp.s ! VF (NPast Hab) Perf Neg p n g  --# notpresent
                 } ;
 				    
           quest =
@@ -379,22 +380,22 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
           vps = case <t,b> of {
 			   <VPGenPres,Pos>  => vp.s ! VF NPresent Imperf Pos p n g ;
                <VPGenPres,Neg>  => vp.s ! VF NPresent Imperf Neg p n g ;
-               <VPFut,Pos>      => vp.s ! VF (NFuture Defin) Imperf Pos p n g ;
-               <VPFut,Neg>      => vp.s ! VF (NFuture Defin) Imperf Neg p n g ;
-               <VPSmplPast,Pos> => vp.s ! VF (NPast Simpl) Imperf Pos p n g ;
-               <VPSmplPast,Neg> => vp.s ! VF (NPast Simpl) Imperf Neg p n g ;
+               <VPFut,Pos>      => vp.s ! VF (NFuture Defin) Imperf Pos p n g ; --# notpresent
+               <VPFut,Neg>      => vp.s ! VF (NFuture Defin) Imperf Neg p n g ; --# notpresent
+               <VPSmplPast,Pos> => vp.s ! VF (NPast Simpl) Imperf Pos p n g ; --# notpresent
+               <VPSmplPast,Neg> => vp.s ! VF (NPast Simpl) Imperf Neg p n g ; --# notpresent
                
                <VPPerfPres,Pos> => vp.s ! VF NPresent Perf Pos p n g ;
                <VPPerfPres,Neg> => vp.s ! VF NPresent Perf Neg p n g ;
-               <VPPerfPast,Pos> => vp.s ! VF (NPast Simpl) Perf Pos p n g ;
-               <VPPerfPast,Neg> => vp.s ! VF (NPast Simpl) Perf Neg p n g ;
-               <VPPerfFut,Pos>  => vp.s ! VF (NFuture Defin) Perf Pos p n g ;
-               <VPPerfFut,Neg>  => vp.s ! VF (NFuture Defin) Perf Neg p n g ;
+               <VPPerfPast,Pos> => vp.s ! VF (NPast Simpl) Perf Pos p n g ; --# notpresent
+               <VPPerfPast,Neg> => vp.s ! VF (NPast Simpl) Perf Neg p n g ; --# notpresent
+               <VPPerfFut,Pos>  => vp.s ! VF (NFuture Defin) Perf Pos p n g ; --# notpresent
+               <VPPerfFut,Neg>  => vp.s ! VF (NFuture Defin) Perf Neg p n g ; --# notpresent
   
                 <VPCondPres, Pos> => vp.s ! VF (NFuture Defin) Imperf Pos p n g ;
                 <VPCondPres, Neg> => vp.s ! VF (NFuture Defin) Imperf Neg p n g ;
-                <VPCondPast, Pos> => vp.s ! VF (NPast Hab) Perf Pos p n g ;
-                <VPCondPast, Neg> => vp.s ! VF (NPast Hab) Perf Neg p n g 
+                <VPCondPast, Pos> => vp.s ! VF (NPast Hab) Perf Pos p n g ; --# notpresent
+                <VPCondPast, Neg> => vp.s ! VF (NPast Hab) Perf Neg p n g  --# notpresent
                 } ;
 				    
           quest =
@@ -434,18 +435,18 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
        subj = vp.subj ;
 	   inf = vp.inf;
 	   ad = vp.ad;
-       embComp = vp.embComp ++ obj1;
-       comp = vp.comp     
+       embComp = Prelude.glue vp.embComp obj1;
+       comp = vp.comp
        } ;
      	 
     insertObjc : (Agr => Str) -> VPHSlash -> VPHSlash = \obj,vp -> 
-    insertObj obj vp ** {c2 = vp.c2} ;
+      insertObj obj vp ** {c2 = vp.c2} ;
 
     insertObjc2 : Str -> VPHSlash -> VPHSlash = \obj,vp -> 
-    insertObj2 obj vp ** {c2 = vp.c2} ;
+      insertObj2 obj vp ** {c2 = vp.c2} ;
 
 	infVP : Bool -> VPH -> {s:Agr => Str} = \isAux,vp ->
-     {s= \\a => vp.obj.s ++ (vp.s! PVForm).inf ++ vp.comp ! a };
+      {s= \\a => vp.obj.s ++ (vp.s ! PVForm).inf ++ vp.comp ! a };
 
     infVV :  VPH -> {s:Agr => Str} = \vp -> {
       s = \\ agr => vp.comp ! agr ++ (vp.s ! PVForm).inf
@@ -458,7 +459,7 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
     
     insertObject : NP -> VPHSlash -> VPH = \np,vps -> {
       s = vps.s ;
-      obj =  {s =  np.s ! objVType vps.c2.c   ++  vps.c2.s ++ vps.obj.s ; a = np.a} ;
+      obj =  {s =  np.s ! objVType vps.c2.c ++ vps.c2.s ++ vps.obj.s ; a = np.a} ;
       subj = vps.c2.c ;
 	  inf = vps.inf;
 	  ad = vps.ad;
@@ -518,7 +519,7 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
     copulaPrLvng :  Polarity -> Number -> NPerson -> Gender -> Str = 
       \po,n,pn,g -> 
       case <po,pn,n,g> of {
-        -- Resembles with "mkVPreNPReg" function for positive --TODO
+        -- Resembles with 'mkVPreNPReg' function for positive --TODO
         -- Present Positive
         <Pos, Pers1,   Sg,   _>  => "huV" ; -- हुँ
         <Pos, Pers1,   Pl,   _>  => "hwV" ; -- हौँ

@@ -1,8 +1,8 @@
 --# -path=.:../../prelude
 --
--- 1 Morpholical inflection of Noun and Verbs of Neplai
+-- 1 Morpholical inflection of Noun and Verbs of Nepali
 --
---  Dinesh Simkhada, Shafqat Virk - 2011
+--  by Dinesh Simkhada, Shafqat Virk - 2011
 --
 
 resource MorphoNep = ResNep ** open Prelude,Predef in {

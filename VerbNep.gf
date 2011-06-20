@@ -5,7 +5,6 @@ concrete VerbNep of Verb = CatNep ** open ResNep in {
 
   lin
     UseV  v = predV v ;
-
     
     ComplVV v vp = insertTrans (insertVV (infVV vp) (predV v) vp.embComp vp) vp.subj ;       
     
@@ -63,8 +62,8 @@ concrete VerbNep of Verb = CatNep ** open ResNep in {
     AdVVP adv vp = insertAdV adv.s vp ;
     
     
-    --AdvVPSlash vp ad = : VPSlash -> Adv -> VPSlash ;  -- use (it) here
-    --AdVVPSlash ad vp = : AdV -> VPSlash -> VPSlash ;  -- always use (it)    
+    AdvVPSlash vp ad = insertObj (\\_ => ad.s ) vp ** {c2 = vp.c2} ; 
+    AdVVPSlash ad vp = insertObj (\\_ => ad.s ) vp ** {c2 = vp.c2} ;    
 
     
     CompAP ap = {s = \\a => ap.s ! giveNumber a ! giveGender a ; t = NonLiving} ;

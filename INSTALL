@@ -1,0 +1,34 @@
+See the page http://www.grammaticalframework.org/download/index.html 
+for installing Grammatical Framework(GF). At this stage it is advised 
+to install from source to get the Nepali resource grammar with GF.
+
+This is just the Nepali resource grammar, you can find the latest 
+development code here, it doesn't work separately you need to have GF 
+installed to get this running. These sources uses its own 
+transliteration system close to developed by MPP.You can see the 
+transliteration scheme at translite-nep.txt this comes along with 
+GF system so you need not worry about it.
+
+If you made some changes use following commands before re-compiling
+your source
+
+Go to cd to ../nepali/ folder and run following command
+
+gf -s <translit.gfs
+
+this will transliterate the files in ../src to Unicode format and 
+copies them to ../nepali/ folder
+
+So if you need to change some string that should be in Nepali Unicode,
+do so in the files on ../nepali/src and run the command above.
+
+This is work in progress and currently have limited vocabulary but we 
+have tried to cover as many different variety of words as possible
+so that it will cover most of the constructs of the language
+
+We will soon Release a demo application that allows translation 
+between all languages in GF system.
+
+If you are interested working with Nepali grammar and want to contribute
+to the project you are most welcome, just drop me a line at 
+dineshsimk [at] gmail [dot] com
