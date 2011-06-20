@@ -1,25 +1,30 @@
 See the page http://www.grammaticalframework.org/download/index.html 
-for installing Grammatical Framework(GF). At this stage it is advised 
-to install from source to get the Nepali resource grammar with GF.
+for downloading installing Grammatical Framework(GF). At this stage 
+it is advised to install from source to get the Nepali resource grammar 
+along with GF.
 
-This is just the Nepali resource grammar, you can find the latest 
-development code here, it doesn't work separately you need to have GF 
-installed to get this running. These sources uses its own 
-transliteration system close to developed by MPP.You can see the 
+This gitbut repository is just the Nepali resource grammar, you can find
+the latest development code here, it doesn't work separately you need to
+have GF installed to get this running. These sources uses its own 
+transliteration system that is close to developed by MPP.You can see the 
 transliteration scheme at translite-nep.txt this comes along with 
 GF system so you need not worry about it.
 
-If you made some changes use following commands before re-compiling
-your source
+If you want to use the latest source from here with the GF system then 
+download the code and extract/replace 'neplai' folder located at 
+../gf/lib/src/nepali with this latest code.
 
-Go to cd to ../nepali/ folder and run following command
+if want to make some changes on the sourec files downloaded from here
+the use following commands before re-compiling GF
+
+cd to ../nepali/ folder and run following command
 
 gf -s <translit.gfs
 
-this will transliterate the files in ../src to Unicode format and 
-copies them to ../nepali/ folder
+this will transliterate the files in ../nepali/src to Unicode format 
+and copies them to ../nepali/ folder
 
-So if you need to change some string that should be in Nepali Unicode,
+if you need to change some string that should be in Nepali Unicode,
 do so in the files on ../nepali/src and run the command above.
 
 This is work in progress and currently have limited vocabulary but we 
