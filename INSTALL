@@ -1,7 +1,7 @@
 See the page http://www.grammaticalframework.org/download/index.html 
 to download and install Grammatical Framework(GF). At this stage 
-it is recomended to install GF from source to get the Nepali resource grammar 
-along with GF.
+it is recomended to install GF from "latest developer code" to 
+get the Nepali resource grammar along with GF.
 
 This github repository is just for the Nepali resource grammar, you can 
 find the latest development code here, it doesn't work separately you 
