@@ -14,7 +14,9 @@ concrete PhraseNep of Phrase = CatNep ** open Prelude, ResNep in {
     UttImpPol pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg True ++ "हउ"} ;
 
     UttIP ip = {s = ip.s ! Nom} ; --- Acc also
+    
     UttIAdv iadv = iadv ;
+    
     UttNP np = {s = np.s ! NPC Nom} ;
         
     UttVP vp = {s = vp.ad ++ vp.obj.s  ++ vp.comp ! (agrP3 Masc Sg) ++ (vp.s ! Inf).inf ++ vp. embComp} ;

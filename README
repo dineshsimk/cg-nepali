@@ -1,16 +1,11 @@
 #Get started
 
-- Read INSTALL file to get started with Grammatical Framework and Nepali Resource Grammar
+- Read **INSTALL** file to get started with Grammatical Framework and Nepali Resource Grammar
 
 - Go to http://www.grammaticalframework.org/ to know more about Grammatical Framework(GF)
 
 
-- To get the synopses of how different categories of words are translated in Nepali
-  please go to  http://www.grammaticalframework.org/lib/doc/synopsis.html
-  you can find all the Syntax Rules and Structural Words there, just hover over the word you 
-  will get the translations in all languages including Nepali. There are few known errors 
-  which i will document here, other than that if you find any errors please let me know at
-  dineshsimk [at] gmail [dot] com
+- To get the synopses of how different categories of words are translated in Nepali please go to  http://www.grammaticalframework.org/lib/doc/synopsis.html you can find all the Syntax Rules and Structural Words there, just hover over the word you will get the translations in all languages including Nepali. There are few known errors which i will document here.
 
 
 
@@ -27,7 +22,6 @@ In GF there may be several concrete syntaxes for a single abstract syntax. This 
 
 Another application of multilingual grammars is multilingual syntax editing, where the user edits a document in multiple languages simultaneously by manipulating abstract syntax terms and observing the resulting concrete syntax output for many languages in parallel. This may involve several natural languages [5], or both natural and formal languages. GF is a suitable grammar formalism for general embedded grammars since it is quite powerful while being parsable in polynomial time, and since it can be used for both parsing and linearization, other necessary grammars such as context-free grammars for external systems can be generated from GF grammars.
 
-[Taken from  : http://www.cse.chalmers.se/alumni/bringert/publ/exjobb/embedded-grammars.pdf]
 [Read More at: http://www.grammaticalframework.org/doc/gf-bibliography.html]
 
 

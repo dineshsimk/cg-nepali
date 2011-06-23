@@ -19,6 +19,6 @@ concrete AdverbNep of Adverb = CatNep ** open ResNep, Prelude, Predef in {
 
     SubjS sub snt = {s = sub.s ++ snt.s } ;
     
-    AdnCAdv cadv = {s = cadv.s} ;
+    AdnCAdv cadv = {s = cadv.s ++ cadv.p} ;
 
 }

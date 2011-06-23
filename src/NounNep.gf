@@ -155,7 +155,7 @@ concrete NounNep of Noun = CatNep ** open ResNep, Prelude in {
     
     AdvCN cn ad = {s = \\n,c => cn.s ! n ! c ++ ad.s  ; g = cn.g ; t = cn.t ; h = cn.h} ;
     --Prelude.glue 
-    SentCN cn sc = {s = \\n,c => sc.s ++ "लाइ" ++ cn.s ! n ! c ; g = cn.g ; t = cn.t ; h = cn.h} ;
+    SentCN cn sc = {s = \\n,c => sc.s ++ "lai:" ++ cn.s ! n ! c ; g = cn.g ; t = cn.t ; h = cn.h} ;
     -- Changed to fix 'reason to sleep' Bug
     -- SentCN cn sc = {s = \\n,c => cn.s ! n ! c ++ sc.s ; g = cn.g ; t = cn.t ; h = cn.h} ;
     

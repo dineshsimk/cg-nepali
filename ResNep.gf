@@ -204,7 +204,6 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
    
 
   param
-
      
     VPHTense = 
        VPGenPres                   -- impf hum       nahim    "ी गो"
