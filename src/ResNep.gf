@@ -1,7 +1,7 @@
 --# -path=.:../abstract:../common:../../prelude
 --
 --1 Nep auxiliary operations.
---  by Dinesh SImkhada and Shafqat Virk - 2011
+--  by Dinesh Simkhada and Shafqat Virk - 2011
 --
 -- This module contains operations that are needed to make the
 -- resource syntax work. 

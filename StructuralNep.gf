@@ -24,7 +24,7 @@ concrete StructuralNep of Structural = CatNep **
     by8means_Prep = mkPrep "ले" ; 
     can8know_VV,can_VV = mkV "सक्नु" ** { isAux = True} ;
     during_Prep = mkPrep "पर्यान्त" ; -- पर्यान्त
-    either7or_DConj = sd2 "अथवा" "या" ** {n = Sg} ; -- अथवा , या
+    either7or_DConj = sd2 "की" "अथवा" ** {n = Sg} ; -- की,  अथवा 
     everybody_NP =  MassNP (UseN (regN "सवौ जाना" Living)) ; -- not a good way coz need to include Noun (सवौ जाना)
     every_Det = mkDet "सबै" "हरेक" Sg ; -- सबै, हरेक
     everything_NP = MassNP (UseN (regN "हारेक कुरा" NonLiving)) ; -- हारेक कुरा

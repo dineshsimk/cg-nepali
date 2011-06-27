@@ -1,6 +1,7 @@
 concrete NounNep of Noun = CatNep ** open ResNep, Prelude in {
 
   flags optimize = all_subs ;
+  flags coding=utf8 ;
 
   lin
  

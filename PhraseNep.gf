@@ -1,4 +1,6 @@
 concrete PhraseNep of Phrase = CatNep ** open Prelude, ResNep in {
+  
+  flags coding=utf8 ;
 
   lin
     PhrUtt pconj utt voc = {s = pconj.s ++ utt.s ++ voc.s} ;
@@ -7,16 +9,14 @@ concrete PhraseNep of Phrase = CatNep ** open Prelude, ResNep in {
     UttQS qs = {s = qs.s ! QDir} ;
     
     -- be a man -> (मन्छे हउ)
-    UttImpSg pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg False ++ "हउ"} ;
+    UttImpSg pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg False } ; --++ "हउ"
     
-    UttImpPl pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Pl False ++ "हआ"} ;
+    UttImpPl pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Pl False } ; --++ "हौ"
     
-    UttImpPol pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg True ++ "हउ"} ;
+    UttImpPol pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg True } ; --++ "हउ"
 
     UttIP ip = {s = ip.s ! Nom} ; --- Acc also
-    
     UttIAdv iadv = iadv ;
-    
     UttNP np = {s = np.s ! NPC Nom} ;
         
     UttVP vp = {s = vp.ad ++ vp.obj.s  ++ vp.comp ! (agrP3 Masc Sg) ++ (vp.s ! Inf).inf ++ vp. embComp} ;
