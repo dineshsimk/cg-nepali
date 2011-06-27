@@ -54,6 +54,22 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
   mkNMF str g t h = mkN str (str + "laI:") (str + "le") (str + "laI:") (str + "baq") (str + "ma") 
                    (str + "hru") (str + "hrulaI:") (str + "hrule") (str + "hrulaI:") (str + "hrubaq") (str + "hruma") g t h ;  
   
+  ----------------------------------------------------------------------
+  -- june/27 Added to handle the -o- ending case (choro/chora)
+  -- is not integraed yet
+  -- should handle all regular noun cases
+
+  mkNS : Str -> Gender -> NType -> NPerson -> Noun ;
+  mkNS str g t h = case str of {
+    st + "o" => mkN ((inflN str) (inflN (st +"a"))) g t h ;
+    _        => mkN ((inflN str) (inflN (str +"hru"))) g t h 
+    } ;
+  
+  inflN s = s (s +"laI:") (s +"le") (s +"laI:") (s +"baq") (s +"ma") ;
+  
+  ----------------------------------------------------------------------
+  
+  
   -- Regular Nouns
   mkNReg : Str -> NType -> NPerson -> Noun ;
   mkNReg str typ hnr = mkNMF str Masc typ hnr ;
@@ -67,12 +83,12 @@ resource MorphoNep = ResNep ** open Prelude,Predef in {
   -- eg water
   mkNUnc : Str -> Gender -> NType -> NPerson -> Noun ;
   mkNUnc str g t h = mkN str (str + "laI:") (str + "le") (str + "laI:") (str + "baq") (str + "ma") 
-                     str (str + "laI:") (str + "le") (str + "laI:") (str + "baq") (str + "ma")  g t h ;  
+                         str (str + "laI:") (str + "le") (str + "laI:") (str + "baq") (str + "ma")  g t h ;  
 
   -- Proper Names
   regN1 : Str -> Gender -> NType -> NPerson -> Noun ;
   regN1 str g t h = mkN str (str + "laI:") (str + "le") (str + "laI:") (str + "baq") (str + "ma")
-                    str str str str str str g t h ;
+                        str (str + "laI:") (str + "le") (str + "laI:") (str + "baq") (str + "ma") g t h ;
 
 
 -- pronouns
