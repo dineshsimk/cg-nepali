@@ -48,7 +48,7 @@ concrete NounNep of Noun = CatNep ** open ResNep, Prelude in {
       } ;
 
     DetNP det = {
-      s = \\c => det2NP det c ; ---- case
+      s = \\c => det2NP det c ; -- case
       a = agrP3 Masc Sg ;
       t = NonLiving 
       } ;

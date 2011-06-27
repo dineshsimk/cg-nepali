@@ -13,11 +13,11 @@ concrete PhraseNep of Phrase = CatNep ** open Prelude, ResNep in {
     --          mkPhr-PConj-Utt-Voc-Phr
     -- Need to diff between singularImpForm-ImpForm
     --                      pluralImpForm-ImpForm and above cases
-    UttImpSg pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg False ++ "hf"} ;
+    UttImpSg pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg False ++ "hof"} ;
     
-    UttImpPl pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Pl False ++ "hw"} ;
+    UttImpPl pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Pl False ++ "hW"} ;
     
-    UttImpPol pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg True ++ "hf"} ;
+    UttImpPol pol imp = {s = pol.s ++ imp.s ! contrNeg True pol.p ! ImpF Sg True ++ "hof"} ;
 
     UttIP ip = {s = ip.s ! Nom} ; --- Acc also
     UttIAdv iadv = iadv ;
