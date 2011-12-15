@@ -72,7 +72,7 @@ resource ResNep = ParamX  ** open Prelude, Predef in {
 
    mkAdjnp : Str -> npAdjective = \str ->
      case str of {
-        st + t@"त" + "ो" => mkAdj1 str str (st+t+"ा") ; -- No Fem for red
+        st + t@"त" + "ो" => mkAdj1 str str (st+t+"ा") ; -- No Fem for red 
         st + "ो"         => mkAdj1 str (st+"ी") (st+"ा") ;
         _                => mkAdj1 str str str
         } ;
